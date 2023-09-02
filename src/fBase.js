@@ -9,6 +9,7 @@ import {
   signInWithPopup,
   signOut,
   updateProfile,
+  updateCurrentUser,
 } from "firebase/auth";
 import {
   getFirestore,
@@ -58,6 +59,7 @@ export {
   signInWithPopup,
   signOut,
   updateProfile,
+  updateCurrentUser,
   db,
   collection,
   doc,

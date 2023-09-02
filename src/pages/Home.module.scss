@@ -1,5 +1,8 @@
-.main {
+.inner-container {
   display: flex;
+  padding: 12px;
+  max-width: 600px;
+  flex-grow: 3;
   .kweet-area {
     flex: auto;
     .kweet-header {
@@ -8,27 +11,28 @@
       }
       .kweet-tab {
         margin-bottom: 30px;
-        ul {
-          display: flex;
-          justify-content: space-around;
-          text-align: center;
-          font: {
-            size: 1.25rem;
+        display: flex;
+        justify-content: space-around;
+        text-align: center;
+        align-items: center;
+        .tab-items {
+          cursor: pointer;
+          span {
+            font-weight: 700;
           }
-          li {
-            width: 100%;
-            height: 100%;
-            display: block;
-            cursor: pointer;
-            &:hover {
-              font-weight: 700;
-            }
-            &.active {
-              font-weight: 700;
-              text-decoration: underline {
-                color: #1d9bf0;
-                thickness: 30%;
-              }
+          div {
+            min-height: 4px;
+            margin-top: 5px;
+          }
+          &:hover,
+          &.active {
+            font-weight: 700;
+            div {
+              background-color: #1d9bf0;
+              margin-top: 5px;
+              height: 4px;
+              min-width: 56px;
+              border-radius: 9999px;
             }
           }
         }

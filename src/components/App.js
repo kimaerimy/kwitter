@@ -1,5 +1,15 @@
-import { useEffect, useState } from "react";
-import { auth, db, onAuthStateChanged, doc, getDoc } from "fBase";
+import { useCallback, useEffect, useState } from "react";
+import {
+  auth,
+  db,
+  onAuthStateChanged,
+  doc,
+  getDoc,
+  ref,
+  storage,
+  getDownloadURL,
+  updateCurrentUser,
+} from "fBase";
 import AppRouter from "components/Router";
 import styles from "./App.module.scss";
 import Loading from "./Loading";
@@ -11,8 +21,18 @@ const App = () => {
   const [isMobile, setIsMobile] = useState(
     window.matchMedia("screen and (max-width: 768px").matches
   );
-  const refreshUser = () => {
-    setUserObj(Object.assign({}, auth.currentUser));
+  const refreshUser = async () => {
+    //setUserObj(Object.assign({}, auth.currentUser));
+    const user = auth.currentUser;
+    const dbUser = await getDoc(doc(db, "users", user.uid));
+    setUserObj({
+      displayName: user.displayName ?? dbUser.data().userName,
+      userEmail: user.email,
+      uid: user.uid,
+      userPhoto: user.photoURL,
+      userBg: dbUser.data().userBg,
+      user,
+    });
   };
 
   useEffect(() => {
@@ -24,7 +44,9 @@ const App = () => {
           displayName: user.displayName ?? dbUser.data().userName,
           userEmail: user.email,
           uid: user.uid,
-          updateProfile: (args) => user.updateProfile(args),
+          userPhoto: user.photoURL,
+          userBg: dbUser.data().userBg,
+          user,
         });
       } else {
         setIsLoggedIn(false);

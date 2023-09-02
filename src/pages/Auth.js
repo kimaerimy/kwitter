@@ -9,6 +9,7 @@ import {
   setDoc,
   collection,
   doc,
+  getDoc,
 } from "fBase";
 import { useState } from "react";
 import styles from "./Auth.module.scss";
@@ -33,9 +34,15 @@ const Auth = ({ isMobile }) => {
             userCredential.user.displayName ??
             userCredential.user.email.split("@")[0],
           userEmail: userCredential.user.email,
+          userPhoto: userCredential.user.photoURL ?? "",
+          userBg: "",
         });
       } else {
-        await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
       }
     } catch (error) {
       setError(error.message.split("Firebase: ")[1]);
@@ -67,7 +74,7 @@ const Auth = ({ isMobile }) => {
   };
   return (
     <div
-      className={`${styles["content-wrap"]} ${
+      className={`${styles["inner-container"]} ${
         isMobile ? styles["mobile-wrap"] : ``
       }`}
     >

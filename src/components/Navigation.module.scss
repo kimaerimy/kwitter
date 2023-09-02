@@ -1,9 +1,10 @@
-.header {
-  width: 275px;
+.inner-container {
+  // width: 175px;
   background-color: white;
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
+  width: 175px;
   nav {
     position: fixed;
     ul {

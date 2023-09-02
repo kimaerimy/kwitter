@@ -10,24 +10,26 @@ const AppRouter = ({ isLoggedIn, userObj, refreshUser, isMobile }) => {
     <Router>
       {/* {isLoggedIn && <Navigation userObj={userObj} />} */}
       <div className={styles["container"]}>
-        {/* <Navigation userObj={userObj} /> */}
-        <Routes>
-          {isLoggedIn ? (
-            <>
-              <Route path={`/`} element={<Home userObj={userObj} />} />
-              <Route
-                path="/profile"
-                element={
-                  <Profile userObj={userObj} refreshUser={refreshUser} />
-                }
-              />
-            </>
-          ) : (
-            <>
-              <Route path={`/`} element={<Auth isMobile={isMobile} />} />
-            </>
-          )}
-        </Routes>
+        <div className={styles["outer-container"]}>
+          <Navigation userObj={userObj} />
+          <Routes>
+            {isLoggedIn ? (
+              <>
+                <Route path={`/`} element={<Home userObj={userObj} />} />
+                <Route
+                  path="/profile"
+                  element={
+                    <Profile userObj={userObj} refreshUser={refreshUser} />
+                  }
+                />
+              </>
+            ) : (
+              <>
+                <Route path={`/`} element={<Auth isMobile={isMobile} />} />
+              </>
+            )}
+          </Routes>
+        </div>
       </div>
       <footer>&copy; {new Date().getFullYear()} Kwitter</footer>
     </Router>

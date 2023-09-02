@@ -12,7 +12,7 @@ import styles from "./Kweet.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 
-const Kweet = ({ kweetObj, isOwner }) => {
+const Kweet = ({ kweetObj, isOwner, creatorProfiles }) => {
   const [editing, setEditing] = useState(false);
   const [newKweet, setNewKweet] = useState(kweetObj.text);
   const onDelete = async () => {
@@ -41,12 +41,14 @@ const Kweet = ({ kweetObj, isOwner }) => {
     setEditing(false);
   };
   return (
-    <div className={styles["kweet-view-area"]}>
+    <div className={styles["inner-container"]}>
       <div className={styles["kweet-view"]}>
         <div className={styles["creator-profile"]}>
-          <span className={styles["photo"]}>PHOTO</span>
+          <span className={styles["photo"]}>
+            <img src={creatorProfiles.userPhoto} alt="userPhoto" />
+          </span>
           <div className={styles["info"]}>
-            <span className={styles["name"]}>{kweetObj.creatorId}</span>
+            <span className={styles["name"]}>{creatorProfiles.userName}</span>
             <span className={styles["date"]}>
               {new Date(kweetObj.createdAt).toLocaleDateString()}
             </span>

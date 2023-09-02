@@ -15,24 +15,19 @@ import Kweet from "components/Kweet";
 import Navigation from "components/Navigation";
 import styles from "./Home.module.scss";
 import { Link } from "react-router-dom";
+import { QuerySnapshot } from "firebase/firestore";
 
 const Home = ({ userObj }) => {
   const [kweets, setKweets] = useState([]);
   const [tabIndex, setTabIndex] = useState(0);
-
+  const [kweetsProfiles, setKweetsProfiles] = useState({});
   const onClickTab = (index) => {
     setTabIndex(index);
   };
   useEffect(() => {
     onSnapshot(
-      tabIndex === 1
-        ? query(collection(db, "kweets"), orderBy("createdAt", "desc"))
-        : query(
-            collection(db, "kweets"),
-            where("creatorId", "==", userObj.uid),
-            orderBy("createdAt", "desc")
-          ),
-      (snapshot) => {
+      query(collection(db, "kweets"), orderBy("createdAt", "desc")),
+      async (snapshot) => {
         const kweetArray = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
@@ -40,9 +35,16 @@ const Home = ({ userObj }) => {
         setKweets(kweetArray);
       }
     );
+    onSnapshot(query(collection(db, "users")), (snapshot) => {
+      const profilesObject = {};
+      snapshot.docs.forEach((doc) => {
+        profilesObject[doc.id] = doc.data();
+      });
+      setKweetsProfiles(profilesObject);
+    });
   }, []);
   return (
-    <div className={styles["main"]}>
+    <div className={styles["inner-container"]}>
       {/* <div className={styles["nav-area"]}> */}
       {/* <Navigation userObj={userObj} /> */}
       {/* </div> */}
@@ -54,20 +56,24 @@ const Home = ({ userObj }) => {
             </Link>
           </div>
           <div className={styles["kweet-tab"]}>
-            <ul>
-              <li
-                onClick={() => onClickTab(0)}
-                className={`${tabIndex === 0 && styles["active"]}`}
-              >
-                For you
-              </li>
-              <li
-                onClick={() => onClickTab(1)}
-                className={`${tabIndex === 1 && styles["active"]}`}
-              >
-                Following
-              </li>
-            </ul>
+            <div
+              className={`${styles["tab-items"]} ${
+                tabIndex === 0 && styles["active"]
+              }`}
+              onClick={() => onClickTab(0)}
+            >
+              <span>For You</span>
+              <div></div>
+            </div>
+            <div
+              className={`${styles["tab-items"]} ${
+                tabIndex === 1 && styles["active"]
+              }`}
+              onClick={() => onClickTab(1)}
+            >
+              <span>Following</span>
+              <div></div>
+            </div>
           </div>
         </div>
         <div className={styles["kweet-main"]}>
@@ -77,6 +83,7 @@ const Home = ({ userObj }) => {
               key={kweet.id}
               kweetObj={kweet}
               isOwner={kweet.creatorId === userObj.uid}
+              creatorProfiles={kweetsProfiles[kweet.creatorId]}
             />
           ))}
           <hr />

@@ -9,7 +9,7 @@ import {
 
 const Navigation = ({ userObj }) => {
   return (
-    <div className={styles["header"]}>
+    <div className={styles["inner-container"]}>
       <nav>
         <ul>
           <li>

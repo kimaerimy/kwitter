@@ -48,7 +48,7 @@ const KweetFactory = ({ userObj }) => {
     fileInput.current.value = null;
   };
   return (
-    <div className={styles["kweet-write-area"]}>
+    <div className={styles["inner-container"]}>
       <form onSubmit={onSubmit}>
         <textarea
           className={styles["textarea"]}
