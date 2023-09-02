@@ -1,0 +1,54 @@
+$main-bgcolor: #1d9bf0;
+.kweet-view-area {
+  border: 1px solid #e3e3e3;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  .kweet-view {
+    padding: 10px;
+    .creator-profile {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      .info {
+        display: flex;
+        flex-direction: column;
+        margin-left: 20px;
+      }
+    }
+    .view {
+      input,
+      button {
+        cursor: pointer;
+        width: 100%;
+        padding: 7px 20px;
+        border-radius: 5px;
+        border: none;
+        background-color: grey;
+        color: #fff;
+        margin-bottom: 10px;
+        &[type="submit"] {
+          background-color: $main-bgcolor;
+        }
+      }
+      span {
+        &.fas {
+          margin-right: 10px;
+          cursor: pointer;
+        }
+      }
+      textarea {
+        resize: none;
+        width: 100%;
+        border: none;
+        outline-color: #c1b9b9;
+        margin-bottom: 20px;
+      }
+      p {
+        margin-bottom: 20px;
+      }
+    }
+    img {
+      width: 100%;
+    }
+  }
+}

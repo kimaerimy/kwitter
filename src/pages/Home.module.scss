@@ -1,0 +1,44 @@
+.main {
+  display: flex;
+  .kweet-area {
+    flex: auto;
+    .kweet-header {
+      .kweet-home {
+        margin-bottom: 30px;
+      }
+      .kweet-tab {
+        margin-bottom: 30px;
+        ul {
+          display: flex;
+          justify-content: space-around;
+          text-align: center;
+          font: {
+            size: 1.25rem;
+          }
+          li {
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: pointer;
+            &:hover {
+              font-weight: 700;
+            }
+            &.active {
+              font-weight: 700;
+              text-decoration: underline {
+                color: #1d9bf0;
+                thickness: 30%;
+              }
+            }
+          }
+        }
+      }
+    }
+    .kweet-main {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    }
+  }
+}

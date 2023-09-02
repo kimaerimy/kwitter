@@ -1,0 +1,32 @@
+.header {
+  width: 275px;
+  background-color: white;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  nav {
+    position: fixed;
+    ul {
+      li {
+        padding: 12px;
+        &:hover {
+          background-color: rgba(15, 20, 25, 0.1);
+          border-radius: 20px;
+        }
+        span {
+          text-align: left;
+          i {
+            margin-right: 0.8rem;
+          }
+          font-size: 1.125rem;
+          text-decoration: none;
+        }
+        &:first-child {
+          div {
+            width: 25px;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,60 @@
+$main-bgcolor: #1d9bf0;
+
+.kweet-write-area {
+  margin-bottom: 50px;
+  textarea {
+    resize: none;
+    width: 100%;
+    border: none;
+    outline-color: #fff;
+  }
+  .file-area {
+    .file-thumb {
+      position: relative;
+      img {
+        width: 100%;
+      }
+      button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: #555151;
+        border: none;
+        border-radius: 20px;
+        color: #fff;
+        line-height: 1rem;
+        padding: 20px;
+        cursor: pointer;
+      }
+    }
+    .file-input {
+      display: flex;
+      justify-content: space-between;
+      label {
+        display: inline-block;
+        padding: 10px 20px;
+        color: #fff;
+        vertical-align: middle;
+        background-color: #999999;
+        cursor: pointer;
+        height: 40px;
+        margin-left: 10px;
+      }
+      input[type="file"] {
+        display: none;
+      }
+    }
+  }
+  input {
+    padding: 10px 20px;
+    &[type="submit"] {
+      cursor: pointer;
+      background-color: $main-bgcolor;
+      color: #fff;
+      font-weight: 700;
+      border: none {
+        radius: 20px;
+      }
+    }
+  }
+}
