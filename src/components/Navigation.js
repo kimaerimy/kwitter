@@ -1,13 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styles from "./Navigation.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faHouseChimney,
-  faMagnifyingGlass,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
+import { faHouseChimney, faHouseUser, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faUser as faUserRegular } from "@fortawesome/free-regular-svg-icons";
 
 const Navigation = ({ userObj }) => {
+  const location = useLocation().pathname.split("/")[1];
   return (
     <div className={styles["inner-container"]}>
       <nav>
@@ -25,60 +23,22 @@ const Navigation = ({ userObj }) => {
             <Link to="/">
               <span>
                 <i>
-                  <FontAwesomeIcon icon={faHouseChimney} />
+                  <FontAwesomeIcon icon={location === "" ? faHouseUser : faHouseChimney} />
                 </i>
-                Home
               </span>
-            </Link>
-          </li>
-          <li>
-            <Link to="/">
-              <span>
-                <i>
-                  <FontAwesomeIcon icon={faMagnifyingGlass} />
-                </i>
-                Explore
-              </span>
-            </Link>
-          </li>
-          <li>
-            <Link to="/">
-              <span>
-                <i>
-                  <FontAwesomeIcon icon={faHouseChimney} />
-                </i>
-                Notifications
-              </span>
-            </Link>
-          </li>
-          <li>
-            <Link to="/">
-              <span>
-                <i>
-                  <FontAwesomeIcon icon={faHouseChimney} />
-                </i>
-                Message
-              </span>
+              <span>Home</span>
             </Link>
           </li>
           <li>
             <Link to="/Profile">
               <span>
                 <i>
-                  <FontAwesomeIcon icon={faUser} />
+                  <FontAwesomeIcon icon={location === "Profile" ? faUser : faUserRegular} />
                 </i>
-                Profile
               </span>
+              <span>Profile</span>
             </Link>
           </li>
-
-          {userObj && (
-            <li>
-              <Link to="/profile">
-                {userObj.displayName ?? userObj.email} 's Profile
-              </Link>
-            </li>
-          )}
         </ul>
       </nav>
     </div>

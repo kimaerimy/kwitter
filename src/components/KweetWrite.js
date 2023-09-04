@@ -10,12 +10,14 @@ import {
 import { useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import styles from "./KweetWrite.module.scss";
+import { faImage } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const KweetFactory = ({ userObj }) => {
   const [kweet, setKweet] = useState("");
   const [attachment, setAttachment] = useState(null);
   const fileInput = useRef();
-
+  const [activeBtn, setActiveBtn] = useState(false);
   const onSubmit = async (event) => {
     event.preventDefault();
     let attachmentUrl = "";
@@ -34,21 +36,33 @@ const KweetFactory = ({ userObj }) => {
     onClear();
   };
   const onChange = (event) => {
+    if (event.target.value === "") {
+      setActiveBtn(false);
+    } else {
+      setActiveBtn(true);
+    }
     setKweet(event.target.value);
   };
   const onFileChange = (event) => {
     const reader = new FileReader();
     reader.onloadend = (finishedEvent) => {
       setAttachment(finishedEvent.currentTarget.result);
+      setActiveBtn(true);
     };
     reader.readAsDataURL(event.target.files[0]);
   };
   const onClear = () => {
     setAttachment(null);
+    if (!kweet) {
+      setActiveBtn(false);
+    }
     fileInput.current.value = null;
   };
   return (
     <div className={styles["inner-container"]}>
+      <div className={styles["profile"]}>
+        <img src={userObj.userPhoto} alt="userPhoto" />
+      </div>
       <form onSubmit={onSubmit}>
         <textarea
           className={styles["textarea"]}
@@ -66,7 +80,12 @@ const KweetFactory = ({ userObj }) => {
             </div>
           )}
           <div className={styles["file-input"]}>
-            <label htmlFor="file">첨부</label>
+            <label
+              htmlFor="file"
+              className={`${activeBtn && styles["active"]}`}
+            >
+              <FontAwesomeIcon icon={faImage} />
+            </label>
             <input
               id="file"
               type="file"
@@ -76,7 +95,9 @@ const KweetFactory = ({ userObj }) => {
             />
             <input
               type="submit"
-              className={`${!kweet && styles["dd"]}`}
+              className={`${!kweet && styles["dd"]} ${
+                activeBtn && styles["active"]
+              }`}
               value="Post"
             />
           </div>

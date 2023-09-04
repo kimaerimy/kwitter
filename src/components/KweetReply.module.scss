@@ -1,0 +1,38 @@
+.container {
+  .reply-submit {
+    margin-bottom: 20px;
+    form {
+      display: flex;
+      justify-content: space-between;
+      input[type="text"] {
+        width: 100%;
+        border: none;
+        outline: none;
+        font-weight: 300;
+      }
+      input[type="submit"] {
+        background-color: #000;
+        color: #fff;
+        border: none;
+        border-radius: 9999px;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+    }
+  }
+  .content {
+    .items {
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      span {
+        font-weight: 300;
+        &:first-child {
+          font-weight: 400;
+          width: 100px;
+          margin-right: 20px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

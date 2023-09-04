@@ -7,9 +7,7 @@ import {
   signInWithEmailAndPassword,
   db,
   setDoc,
-  collection,
   doc,
-  getDoc,
 } from "fBase";
 import { useState } from "react";
 import styles from "./Auth.module.scss";

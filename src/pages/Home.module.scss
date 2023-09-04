@@ -18,7 +18,8 @@
         .tab-items {
           cursor: pointer;
           span {
-            font-weight: 700;
+            font-weight: 400;
+            color: #726d6d;
           }
           div {
             min-height: 4px;
@@ -26,7 +27,10 @@
           }
           &:hover,
           &.active {
-            font-weight: 700;
+            span {
+              font-weight: 700;
+              color: #000;
+            }
             div {
               background-color: #1d9bf0;
               margin-top: 5px;

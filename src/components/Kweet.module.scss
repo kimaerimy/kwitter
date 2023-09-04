@@ -3,55 +3,119 @@ $main-bgcolor: #1d9bf0;
   border: 1px solid #e3e3e3;
   border-radius: 10px;
   margin-bottom: 30px;
-  .kweet-view {
+  .items {
     padding: 10px;
-    .creator-profile {
+    .kweet-profile {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       margin-bottom: 20px;
+      height: 50px;
       .photo {
+        flex-shrink: 0;
         width: 50px;
+        height: 100%;
+        background-color: #c1b9b9;
+        border-radius: 9999px;
       }
       .info {
         display: flex;
         flex-direction: column;
+        justify-content: space-around;
         margin-left: 20px;
+        height: 100%;
+        width: 100%;
+        span {
+          &.date {
+            color: #c1b9b9;
+          }
+        }
+      }
+      .more {
+        height: 100%;
+        cursor: pointer;
+        position: relative;
+        .more-popup {
+          position: absolute;
+          right: 0;
+          top: 0;
+          .popup-container {
+            display: flex;
+            flex-direction: column;
+            width: 100px;
+            background-color: #fff;
+            border: 1px solid #e3e3e3;
+            border-radius: 10px;
+            padding: 10px;
+            .popup-items {
+              display: flex;
+              justify-content: flex-start;
+              align-items: center;
+              div:first-child {
+                width: 20px;
+              }
+              &:first-child {
+                color: red;
+                margin-bottom: 20px;
+              }
+            }
+          }
+        }
       }
     }
-    .view {
-      input,
-      button {
-        cursor: pointer;
-        width: 100%;
-        padding: 7px 20px;
-        border-radius: 5px;
-        border: none;
-        background-color: grey;
-        color: #fff;
-        margin-bottom: 10px;
-        &[type="submit"] {
-          background-color: $main-bgcolor;
-        }
-      }
-      span {
-        &.fas {
-          margin-right: 10px;
+    .kweet-content {
+      .kweet-edit {
+        input,
+        button {
           cursor: pointer;
+          width: 100%;
+          padding: 7px 20px;
+          border-radius: 5px;
+          border: none;
+          background-color: grey;
+          color: #fff;
+          margin-bottom: 10px;
+          &[type="submit"] {
+            background-color: $main-bgcolor;
+          }
+        }
+        textarea {
+          resize: none;
+          width: 100%;
+          border: none;
+          outline-color: #c1b9b9;
+          margin-bottom: 20px;
+          font-weight: 300;
         }
       }
-      textarea {
-        resize: none;
-        width: 100%;
-        border: none;
-        outline-color: #c1b9b9;
-        margin-bottom: 20px;
-      }
-      p {
-        margin-bottom: 20px;
+      .kweet-view {
+        .kweet-view-content {
+          p {
+            margin-bottom: 20px;
+            font-weight: 300;
+          }
+          img {
+            margin-bottom: 20px;
+          }
+        }
+        .reply-container {
+          ul {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            li {
+              span {
+                margin-left: 10px;
+              }
+            }
+          }
+        }
       }
     }
     img {
       width: 100%;
+      max-width: 150px;
     }
   }
 }

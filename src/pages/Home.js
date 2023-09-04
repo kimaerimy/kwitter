@@ -5,17 +5,11 @@ import {
   onSnapshot,
   query,
   orderBy,
-  getDoc,
-  doc,
-  where,
-  getDocs,
 } from "fBase";
 import KweetWrite from "components/KweetWrite";
 import Kweet from "components/Kweet";
-import Navigation from "components/Navigation";
 import styles from "./Home.module.scss";
 import { Link } from "react-router-dom";
-import { QuerySnapshot } from "firebase/firestore";
 
 const Home = ({ userObj }) => {
   const [kweets, setKweets] = useState([]);
@@ -24,10 +18,11 @@ const Home = ({ userObj }) => {
   const onClickTab = (index) => {
     setTabIndex(index);
   };
+
   useEffect(() => {
     onSnapshot(
       query(collection(db, "kweets"), orderBy("createdAt", "desc")),
-      async (snapshot) => {
+      (snapshot) => {
         const kweetArray = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
@@ -62,7 +57,7 @@ const Home = ({ userObj }) => {
               }`}
               onClick={() => onClickTab(0)}
             >
-              <span>For You</span>
+              <span>For you</span>
               <div></div>
             </div>
             <div
@@ -82,7 +77,7 @@ const Home = ({ userObj }) => {
             <Kweet
               key={kweet.id}
               kweetObj={kweet}
-              isOwner={kweet.creatorId === userObj.uid}
+              uid={userObj.uid}
               creatorProfiles={kweetsProfiles[kweet.creatorId]}
             />
           ))}
