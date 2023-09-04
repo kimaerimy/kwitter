@@ -194,7 +194,7 @@ const Profile = ({ userObj, refreshUser }) => {
           <Kweet
             key={kweet.id}
             kweetObj={kweet}
-            isOwner={kweet.creatorId === userObj.uid}
+            uid={userObj.uid}
             creatorProfiles={kweetsProfiles[kweet.creatorId]}
           />
         ))}

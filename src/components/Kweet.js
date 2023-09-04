@@ -24,10 +24,12 @@ import {
 import { faCommentDots } from "@fortawesome/free-regular-svg-icons";
 import KweetReply from "./KweetReply";
 
-const Kweet = ({ kweetObj, creatorProfiles, uid }) => {
+const Kweet = ({ kweetObj, uid }) => {
   const [editing, setEditing] = useState(false);
   const [newKweet, setNewKweet] = useState(kweetObj.text);
   const [countReplies, setCountReplies] = useState(0);
+  const [kweetsProfiles, setKweetsProfiles] = useState({});
+  const creatorProfiles = kweetsProfiles[kweetObj.creatorId];
   const onDelete = async () => {
     if (window.confirm("Are you sure delete this kweet?")) {
       await deleteDoc(doc(db, "kweets", kweetObj.id));
@@ -64,7 +66,14 @@ const Kweet = ({ kweetObj, creatorProfiles, uid }) => {
         setCountReplies(snapshot.docs.length);
       }
     );
-  });
+    onSnapshot(query(collection(db, "users")), (snapshot) => {
+      const profilesObject = {};
+      snapshot.docs.forEach((doc) => {
+        profilesObject[doc.id] = doc.data();
+      });
+      setKweetsProfiles(profilesObject);
+    });
+  }, []);
   return (
     <div className={styles["inner-container"]}>
       <div className={styles["items"]}>
@@ -150,6 +159,7 @@ const Kweet = ({ kweetObj, creatorProfiles, uid }) => {
                   kweetId={kweetObj.id}
                   uid={uid}
                   KweetCreatorId={kweetObj.creatorId}
+                  kweetsProfiles={kweetsProfiles}
                 />
               </div>
             </div>

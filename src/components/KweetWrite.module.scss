@@ -9,6 +9,8 @@ $main-bgcolor: #1d9bf0;
     height: 50px;
     margin-right: 20px;
     flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 9999px;
     img {
       width: 100%;
       height: 100%;

@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  db,
-  collection,
-  onSnapshot,
-  query,
-  orderBy,
-} from "fBase";
+import { db, collection, onSnapshot, query, orderBy } from "fBase";
 import KweetWrite from "components/KweetWrite";
 import Kweet from "components/Kweet";
 import styles from "./Home.module.scss";
@@ -14,7 +8,6 @@ import { Link } from "react-router-dom";
 const Home = ({ userObj }) => {
   const [kweets, setKweets] = useState([]);
   const [tabIndex, setTabIndex] = useState(0);
-  const [kweetsProfiles, setKweetsProfiles] = useState({});
   const onClickTab = (index) => {
     setTabIndex(index);
   };
@@ -30,13 +23,6 @@ const Home = ({ userObj }) => {
         setKweets(kweetArray);
       }
     );
-    onSnapshot(query(collection(db, "users")), (snapshot) => {
-      const profilesObject = {};
-      snapshot.docs.forEach((doc) => {
-        profilesObject[doc.id] = doc.data();
-      });
-      setKweetsProfiles(profilesObject);
-    });
   }, []);
   return (
     <div className={styles["inner-container"]}>
@@ -74,12 +60,7 @@ const Home = ({ userObj }) => {
         <div className={styles["kweet-main"]}>
           <KweetWrite userObj={userObj} />
           {kweets.map((kweet) => (
-            <Kweet
-              key={kweet.id}
-              kweetObj={kweet}
-              uid={userObj.uid}
-              creatorProfiles={kweetsProfiles[kweet.creatorId]}
-            />
+            <Kweet key={kweet.id} kweetObj={kweet} uid={userObj.uid} />
           ))}
           <hr />
         </div>
