@@ -5,7 +5,15 @@ $main-bgcolor: #1d9bf0;
   margin-bottom: 30px;
   .items {
     padding: 10px;
-    .kweet-profile {
+    .badge {
+      margin-bottom: 10px;
+      color: #a9a5a5;
+      font-size: 0.8rem;
+      span {
+        margin-left: 5px;
+      }
+    }
+    .profile {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -40,6 +48,9 @@ $main-bgcolor: #1d9bf0;
           position: absolute;
           right: 0;
           top: 0;
+          &.hidden {
+            display: none;
+          }
           .popup-container {
             display: flex;
             flex-direction: column;
@@ -64,8 +75,8 @@ $main-bgcolor: #1d9bf0;
         }
       }
     }
-    .kweet-content {
-      .kweet-edit {
+    .content {
+      .edit {
         input,
         button {
           cursor: pointer;
@@ -89,8 +100,8 @@ $main-bgcolor: #1d9bf0;
           font-weight: 300;
         }
       }
-      .kweet-view {
-        .kweet-view-content {
+      .view {
+        .view-content {
           p {
             margin-bottom: 20px;
             font-weight: 300;
@@ -100,14 +111,21 @@ $main-bgcolor: #1d9bf0;
           }
         }
         .reply-container {
-          ul {
+          .reply-tab {
             display: flex;
             align-items: center;
             justify-content: space-around;
             margin-bottom: 20px;
             li {
-              span {
+              span:nth-child(2) {
                 margin-left: 10px;
+              }
+              .rekweet-btn {
+                cursor: pointer;
+                &:hover,
+                &.active {
+                  color: #00ba7c;
+                }
               }
             }
           }

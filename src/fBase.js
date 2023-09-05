@@ -26,6 +26,7 @@ import {
   orderBy,
   where,
   getCountFromServer,
+  documentId
 } from "firebase/firestore";
 import {
   getStorage,
@@ -72,6 +73,7 @@ export {
   deleteDoc,
   updateDoc,
   getCountFromServer,
+  documentId,
   storage,
   ref,
   uploadString,

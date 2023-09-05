@@ -15,6 +15,8 @@ import {
   setDoc,
   doc,
   updateDoc,
+  onSnapshot,
+  documentId,
 } from "fBase";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -34,24 +36,12 @@ const Profile = ({ userObj, refreshUser }) => {
   const [kweets, setKweets] = useState([]);
   const [editDiv, setEditDiv] = useState(false);
   const [kweetsProfiles, setKweetsProfiles] = useState({});
+  const [kweetIds, setKweetIds] = useState([]);
+  const [rekweetIds, setReKweetIds] = useState([]);
   const navigate = useNavigate();
   const onLogOut = () => {
     signOut(auth);
     navigate("/");
-  };
-  const getMyKweets = async () => {
-    const kweetsData = await getDocs(
-      query(
-        collection(db, "kweets"),
-        where("creatorId", "==", userObj.uid),
-        orderBy("createdAt", "desc")
-      )
-    );
-    const kweetsArray = kweetsData.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setKweets(kweetsArray);
   };
   const getKweetProfiles = async () => {
     const profiles = await getDocs(collection(db, "users"));
@@ -100,9 +90,46 @@ const Profile = ({ userObj, refreshUser }) => {
     reader.readAsDataURL(files[0]);
   };
   useEffect(() => {
-    getMyKweets();
+    onSnapshot(
+      query(
+        collection(db, "reKweets"),
+        where("creatorId", "==", userObj.uid),
+        orderBy("createdAt", "desc")
+      ),
+      (snapshot) => {
+        const reKweetArray = snapshot.docs.map((doc) => doc.data().kweetId);
+        setReKweetIds(reKweetArray);
+      }
+    );
+    onSnapshot(
+      query(
+        collection(db, "kweets"),
+        where("creatorId", "==", userObj.uid),
+        orderBy("createdAt", "desc")
+      ),
+      (snapshot) => {
+        const kweetsArray = snapshot.docs.map((doc) => doc.id);
+        setKweetIds(kweetsArray);
+      }
+    );
     getKweetProfiles();
   }, []);
+  useEffect(() => {
+    if (kweetIds.length > 0 || rekweetIds.length > 0) {
+      const set = new Set([...kweetIds, ...rekweetIds]);
+      onSnapshot(
+        query(collection(db, "kweets"), where(documentId(), "in", [...set])),
+        (snapshot) => {
+          const kweetArray = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            reKweet: doc.data().creatorId === userObj.uid ? false : true,
+            ...doc.data(),
+          }));
+          setKweets(kweetArray);
+        }
+      );
+    }
+  }, [kweetIds, rekweetIds]);
   return (
     <div className={styles["inner-container"]}>
       <h2>{nickname}</h2>
