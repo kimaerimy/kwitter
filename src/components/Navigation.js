@@ -1,11 +1,21 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import styles from "./Navigation.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHouseChimney, faHouseUser, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHouseChimney,
+  faHouseUser,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { faUser as faUserRegular } from "@fortawesome/free-regular-svg-icons";
+import { auth, signOut } from "fBase";
 
 const Navigation = ({ userObj }) => {
   const location = useLocation().pathname.split("/")[1];
+  const navigate = useNavigate();
+  const onLogOut = () => {
+    signOut(auth);
+    navigate("/");
+  };
   return (
     <div className={styles["inner-container"]}>
       <nav>
@@ -19,27 +29,45 @@ const Navigation = ({ userObj }) => {
               </svg>
             </div>
           </li>
-          <li>
+          <li className={`${location === "" && styles["active"]}`}>
             <Link to="/">
               <span>
                 <i>
-                  <FontAwesomeIcon icon={location === "" ? faHouseUser : faHouseChimney} />
+                  <FontAwesomeIcon icon={faHouseChimney} />
                 </i>
               </span>
               <span>Home</span>
             </Link>
           </li>
-          <li>
+          <li className={`${location === "Profile" && styles["active"]}`}>
             <Link to="/Profile">
               <span>
                 <i>
-                  <FontAwesomeIcon icon={location === "Profile" ? faUser : faUserRegular} />
+                  <FontAwesomeIcon icon={faUserRegular} />
                 </i>
               </span>
               <span>Profile</span>
             </Link>
           </li>
         </ul>
+        <div className={styles["profile-wrap"]}>
+          <div className={styles["info"]}>
+            <div className={styles["photo"]}>
+              <img src={userObj.userPhoto} alt="userPhoto" />
+            </div>
+            <div className={styles["info-detail"]}>
+              <div>
+                <span>{userObj.userName}</span>
+              </div>
+              <div>
+                <span>@{userObj.userEmail.split("@")[0]}</span>
+              </div>
+            </div>
+          </div>
+          <div className={styles["logout-btn"]}>
+            <button onClick={onLogOut}>LogOut</button>
+          </div>
+        </div>
       </nav>
     </div>
   );

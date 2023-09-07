@@ -28,6 +28,7 @@ const App = () => {
     const userDoc = snapshot.data();
     setUserObj({
       displayName: user.displayName ?? userDoc.userName,
+      userName: userDoc.userName,
       userEmail: user.email,
       uid: user.uid,
       userPhoto: user.photoURL,
@@ -35,6 +36,7 @@ const App = () => {
       follow: userDoc.follow ?? [],
       user,
     });
+    // console.log("userObj updated!");
   };
 
   useEffect(() => {
@@ -45,6 +47,7 @@ const App = () => {
         setIsLoggedIn(true);
         setUserObj({
           displayName: user.displayName ?? userDoc.userName,
+          userName: userDoc.userName,
           userEmail: user.email,
           uid: user.uid,
           userPhoto: user.photoURL,

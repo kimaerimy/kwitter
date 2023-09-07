@@ -7,17 +7,13 @@ const Follow = ({ user, userObj: currentUser }) => {
     Boolean(currentUser.follow?.includes(user.id))
   );
   const onFollow = async () => {
-    const { follow } = currentUser;
-    console.log(following, follow);
-    let followArray = [];
     if (following) {
-      followArray = follow?.filter((el) => el !== user.id);
+      currentUser.follow = currentUser.follow?.filter((el) => el !== user.id);
     } else {
-      follow.push(user.id);
-      followArray = follow;
+      currentUser.follow.push(user.id);
     }
     await updateDoc(doc(db, "users", currentUser.uid), {
-      follow: followArray,
+      follow: currentUser.follow,
     });
     setFollowing((prev) => !prev);
   };

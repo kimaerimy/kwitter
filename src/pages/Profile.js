@@ -12,7 +12,6 @@ import {
   ref,
   uploadString,
   getDownloadURL,
-  setDoc,
   doc,
   updateDoc,
   onSnapshot,
@@ -21,9 +20,11 @@ import {
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Profile.module.scss";
-import Kweet from "components/Kweet";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
+import Kweet from "components/Kweet";
+import Follow from "components/Follow";
+import { faFaceSadTear } from "@fortawesome/free-regular-svg-icons";
 
 const Profile = ({ userObj, refreshUser }) => {
   const [inputs, setInputs] = useState({
@@ -38,6 +39,9 @@ const Profile = ({ userObj, refreshUser }) => {
   const [kweetsProfiles, setKweetsProfiles] = useState({});
   const [kweetIds, setKweetIds] = useState([]);
   const [rekweetIds, setReKweetIds] = useState([]);
+  const [tabIndex, setTabIndex] = useState(0);
+  const [following, setFollowing] = useState([]);
+  const [followers, setFollowers] = useState([]);
   const navigate = useNavigate();
   const onLogOut = () => {
     signOut(auth);
@@ -50,6 +54,27 @@ const Profile = ({ userObj, refreshUser }) => {
       profilesObject[doc.id] = doc.data();
     });
     setKweetsProfiles(profilesObject);
+  };
+  const getFollowing = async () => {
+    if (userObj.follow.length === 0) return;
+    const snapshot = await getDocs(
+      query(
+        collection(db, "users"),
+        where(documentId(), "in", [...userObj.follow])
+      )
+    );
+    const docsArr = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    setFollowing(docsArr);
+  };
+  const getFollowers = async () => {
+    const snapshot = await getDocs(
+      query(
+        collection(db, "users"),
+        where("follow", "array-contains", userObj.uid)
+      )
+    );
+    const docsArr = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    setFollowers(docsArr);
   };
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -89,6 +114,9 @@ const Profile = ({ userObj, refreshUser }) => {
     };
     reader.readAsDataURL(files[0]);
   };
+  const onTabClick = (index) => {
+    setTabIndex(index);
+  };
   useEffect(() => {
     onSnapshot(
       query(
@@ -97,8 +125,8 @@ const Profile = ({ userObj, refreshUser }) => {
         orderBy("createdAt", "desc")
       ),
       (snapshot) => {
-        const reKweetArray = snapshot.docs.map((doc) => doc.data().kweetId);
-        setReKweetIds(reKweetArray);
+        const docsArr = snapshot.docs.map((doc) => doc.data().kweetId);
+        setReKweetIds(docsArr);
       }
     );
     onSnapshot(
@@ -108,11 +136,13 @@ const Profile = ({ userObj, refreshUser }) => {
         orderBy("createdAt", "desc")
       ),
       (snapshot) => {
-        const kweetsArray = snapshot.docs.map((doc) => doc.id);
-        setKweetIds(kweetsArray);
+        const docsArr = snapshot.docs.map((doc) => doc.id);
+        setKweetIds(docsArr);
       }
     );
     getKweetProfiles();
+    getFollowers();
+    getFollowing();
   }, []);
   useEffect(() => {
     if (kweetIds.length > 0 || rekweetIds.length > 0) {
@@ -120,19 +150,20 @@ const Profile = ({ userObj, refreshUser }) => {
       onSnapshot(
         query(collection(db, "kweets"), where(documentId(), "in", [...set])),
         (snapshot) => {
-          const kweetArray = snapshot.docs.map((doc) => ({
+          const docsArr = snapshot.docs.map((doc) => ({
             id: doc.id,
             reKweet: doc.data().creatorId === userObj.uid ? false : true,
             ...doc.data(),
           }));
-          setKweets(kweetArray);
+          docsArr.sort((a, b) => b.createdAt - a.createdAt);
+          setKweets(docsArr);
         }
       );
     }
   }, [kweetIds, rekweetIds]);
   return (
     <div className={styles["inner-container"]}>
-      <h2>{nickname}</h2>
+      <h3>{nickname}</h3>
       <div className={styles["profile-area"]}>
         <div className={styles["profile-bg"]}>
           {userObj.userBg && <img src={userObj.userBg} alt="userBg" />}
@@ -148,9 +179,17 @@ const Profile = ({ userObj, refreshUser }) => {
           <button onClick={() => setIsEditing(true)}>Edit Profile</button>
         </div>
         <div className={styles["profile-content"]}>
-          <p>
+          <div className={styles["name"]}>
             <span>{nickname}</span>@{userObj.userEmail}
-          </p>
+          </div>
+          <div className={styles["follow"]}>
+            <div>
+              <span>{following?.length}</span> Following
+            </div>
+            <div>
+              <span>{followers?.length}</span> Followers
+            </div>
+          </div>
         </div>
       </div>
       {isEditing && (
@@ -211,20 +250,92 @@ const Profile = ({ userObj, refreshUser }) => {
         </div>
       )}
       <div className={styles["tab-area"]}>
-        <div className={styles["tab-items"]}>
-          <span>Posts</span>
-          <div></div>
+        <div
+          className={`${styles["tab-items"]} ${
+            tabIndex === 0 && styles["active"]
+          }`}
+          onClick={() => onTabClick(0)}
+        >
+          <div className={styles["item-wrap"]}>
+            <span>Posts</span>
+            <div></div>
+          </div>
+        </div>
+        <div
+          className={`${styles["tab-items"]} ${
+            tabIndex === 1 && styles["active"]
+          }`}
+          onClick={() => onTabClick(1)}
+        >
+          <div className={styles["item-wrap"]}>
+            <span>Following</span>
+            <div></div>
+          </div>
+        </div>
+        <div
+          className={`${styles["tab-items"]} ${
+            tabIndex === 2 && styles["active"]
+          }`}
+          onClick={() => onTabClick(2)}
+        >
+          <div className={styles["item-wrap"]}>
+            <span>Followers</span>
+            <div></div>
+          </div>
         </div>
       </div>
-      <div className={styles["kweet-area"]}>
-        {kweets.map((kweet) => (
-          <Kweet
-            key={kweet.id}
-            kweetObj={kweet}
-            uid={userObj.uid}
-            creatorProfiles={kweetsProfiles[kweet.creatorId]}
-          />
-        ))}
+      <div className={styles["tab-content"]}>
+        {tabIndex === 0 && (
+          <div className={styles["kweet-area"]}>
+            {kweets.map((kweet) => (
+              <Kweet
+                key={kweet.id}
+                kweetObj={kweet}
+                uid={userObj.uid}
+                creatorProfiles={kweetsProfiles[kweet.creatorId]}
+              />
+            ))}
+          </div>
+        )}
+        {tabIndex === 1 && (
+          <>
+            {following?.map((user, idx) => (
+              <Follow
+                user={user}
+                userObj={userObj}
+                key={idx}
+                refreshUser={refreshUser}
+              />
+            ))}
+          </>
+        )}
+        {tabIndex === 2 && (
+          <>
+            {followers.length > 0 ? (
+              <>
+                {followers?.map((user, idx) => (
+                  <Follow
+                    user={user}
+                    userObj={userObj}
+                    key={idx}
+                    refreshUser={refreshUser}
+                  />
+                ))}
+              </>
+            ) : (
+              <>
+                <div className={styles["null-container"]}>
+                  <div className={styles["bg"]}>
+                    <FontAwesomeIcon icon={faFaceSadTear} size="2xl" />
+                  </div>
+                  <div className={styles["comment"]}>
+                    <span>No Followers...</span>
+                  </div>
+                </div>
+              </>
+            )}
+          </>
+        )}
       </div>
       <button onClick={onLogOut}>Log Out</button>
     </div>

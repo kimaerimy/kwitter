@@ -1,5 +1,7 @@
 .inner-container {
-  flex: column wrap;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
   background-color: #f7f9f9;
   border-radius: 10px;
   .title {
