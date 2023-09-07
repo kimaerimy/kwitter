@@ -11,7 +11,7 @@ import {
   updateCurrentUser,
 } from "fBase";
 import AppRouter from "components/Router";
-import styles from "./App.module.scss";
+import "./App.module.scss";
 import Loading from "./Loading";
 
 const App = () => {
@@ -24,13 +24,15 @@ const App = () => {
   const refreshUser = async () => {
     //setUserObj(Object.assign({}, auth.currentUser));
     const user = auth.currentUser;
-    const dbUser = await getDoc(doc(db, "users", user.uid));
+    const snapshot = await getDoc(doc(db, "users", user.uid));
+    const userDoc = snapshot.data();
     setUserObj({
-      displayName: user.displayName ?? dbUser.data().userName,
+      displayName: user.displayName ?? userDoc.userName,
       userEmail: user.email,
       uid: user.uid,
       userPhoto: user.photoURL,
-      userBg: dbUser.data().userBg,
+      userBg: userDoc.userBg,
+      follow: userDoc.follow ?? [],
       user,
     });
   };
@@ -38,14 +40,16 @@ const App = () => {
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const dbUser = await getDoc(doc(db, "users", user.uid));
+        const snapshot = await getDoc(doc(db, "users", user.uid));
+        const userDoc = snapshot.data();
         setIsLoggedIn(true);
         setUserObj({
-          displayName: user.displayName ?? dbUser.data().userName,
+          displayName: user.displayName ?? userDoc.userName,
           userEmail: user.email,
           uid: user.uid,
           userPhoto: user.photoURL,
-          userBg: dbUser.data().userBg,
+          userBg: userDoc.userBg,
+          follow: userDoc.follow ?? [],
           user,
         });
       } else {

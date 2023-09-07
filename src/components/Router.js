@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Auth from "pages/Auth";
 import Home from "pages/Home";
 import Navigation from "components/Navigation";
+import Sidebar from "components/Sidebar";
 import Profile from "pages/Profile";
 import styles from "./Router.module.scss";
 
@@ -29,6 +30,7 @@ const AppRouter = ({ isLoggedIn, userObj, refreshUser, isMobile }) => {
               </>
             )}
           </Routes>
+          <Sidebar userObj={userObj} />
         </div>
       </div>
       <footer>&copy; {new Date().getFullYear()} Kwitter</footer>
