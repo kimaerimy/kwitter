@@ -61,7 +61,7 @@ const KweetFactory = ({ userObj }) => {
   return (
     <div className={styles["inner-container"]}>
       <div className={styles["profile"]}>
-        <img src={userObj.userPhoto} alt="userPhoto" />
+        {userObj.userPhoto && <img src={userObj.userPhoto} alt="userPhoto" />}
       </div>
       <form onSubmit={onSubmit}>
         <textarea

@@ -58,10 +58,10 @@ const KweetReply = ({ kweetId, uid, KweetCreatorId, kweetsProfiles }) => {
             </form>
           </div>
         )}
-        {replies.map((reply, idx) => (
+        {replies?.map((reply, idx) => (
           <div className={styles["items"]} key={idx}>
             <span>
-              {kweetsProfiles && kweetsProfiles[reply.creatorId].userName}
+              {kweetsProfiles[reply.creatorId]?.userName}
             </span>
             <span>{reply.text}</span>
           </div>

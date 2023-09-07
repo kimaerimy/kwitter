@@ -34,6 +34,7 @@ const Auth = ({ isMobile }) => {
           userEmail: userCredential.user.email,
           userPhoto: userCredential.user.photoURL ?? "",
           userBg: "",
+          following: []
         });
       } else {
         const userCredential = await signInWithEmailAndPassword(

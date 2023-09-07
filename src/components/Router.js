@@ -2,24 +2,37 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Auth from "pages/Auth";
 import Home from "pages/Home";
 import Navigation from "components/Navigation";
+import Sidebar from "components/Sidebar";
 import Profile from "pages/Profile";
 import styles from "./Router.module.scss";
+import { Fragment } from "react";
 
 const AppRouter = ({ isLoggedIn, userObj, refreshUser, isMobile }) => {
   return (
     <Router>
-      {/* {isLoggedIn && <Navigation userObj={userObj} />} */}
       <div className={styles["container"]}>
         <div className={styles["outer-container"]}>
-          <Navigation userObj={userObj} />
           <Routes>
             {isLoggedIn ? (
               <>
-                <Route path={`/`} element={<Home userObj={userObj} />} />
+                <Route
+                  path={`/`}
+                  element={
+                    <>
+                      <Navigation userObj={userObj} />
+                      <Home userObj={userObj} refreshUser={refreshUser} />
+                      <Sidebar userObj={userObj} />
+                    </>
+                  }
+                />
                 <Route
                   path="/profile"
                   element={
-                    <Profile userObj={userObj} refreshUser={refreshUser} />
+                    <>
+                      <Navigation userObj={userObj} />
+                      <Profile userObj={userObj} refreshUser={refreshUser} />
+                      <Sidebar userObj={userObj} />
+                    </>
                   }
                 />
               </>
