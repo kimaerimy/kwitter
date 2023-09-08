@@ -31,7 +31,7 @@ example code box
 
 ## 링크
 
-* [<https://www.github.io/kwitter>](https://kimaerimy.github.io/kwitter)
+* [https://www.github.io/kwitter](https://kimaerimy.github.io/kwitter)
 * [Github](https://www.github.com)
 
 ## 강조
