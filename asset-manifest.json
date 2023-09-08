@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/kwitter/static/css/main.d571e18d.css",
-    "main.js": "/kwitter/static/js/main.567821aa.js",
+    "main.js": "/kwitter/static/js/main.0c3ab0d4.js",
     "static/media/NotoSansKR-Bold.woff2": "/kwitter/static/media/NotoSansKR-Bold.4665b16c0fc4228919e2.woff2",
     "static/media/NotoSansKR-Regular.woff2": "/kwitter/static/media/NotoSansKR-Regular.e9602d66930a05b626cf.woff2",
     "static/media/NotoSansKR-Light.woff2": "/kwitter/static/media/NotoSansKR-Light.ff050d2675a663fd413d.woff2",
     "index.html": "/kwitter/index.html",
     "main.d571e18d.css.map": "/kwitter/static/css/main.d571e18d.css.map",
-    "main.567821aa.js.map": "/kwitter/static/js/main.567821aa.js.map"
+    "main.0c3ab0d4.js.map": "/kwitter/static/js/main.0c3ab0d4.js.map"
   },
   "entrypoints": [
     "static/css/main.d571e18d.css",
-    "static/js/main.567821aa.js"
+    "static/js/main.0c3ab0d4.js"
   ]
 }
