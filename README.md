@@ -1,70 +1,44 @@
-# Getting Started with Create React App
+## Kwitter : Twitter Clone Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+트위터 클론 프로젝트 
 
-## Available Scripts
+  
+## 사용 기술
 
-In the project directory, you can run:
+> Firebase : Firestore, Authentication, 
 
-### `npm start`
+> React.js, SCSS
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 구현된 기능
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+* 게시글(트윗)
+  * 댓글
+  * 리트윗 
 
-### `npm test`
+* 회원가입 및 로그인
+  * Firebase Authentication을 활용한 회원가입 및 로그인 구현
+  * Firebase Firestore 추가 회원정보 구현
+    * 프로필
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 코드 (Code)
 
-### `npm run build`
+* 문장속 코드 `example code inline` 삽입 예시입니다.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* 박스형 코드 삽입예시입니다.
+```
+example code box
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 링크
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+* [https://www.github.io/kwitter](https://kimaerimy.github.io/kwitter)
+* [Github](https://www.github.com)
 
-### `npm run eject`
+## 강조
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+* 강조 문법 **강조된 부분** 예시입니다.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 이미지
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+![kwitter-login](https://github.com/kimaerimy/kwitter/assets/102725693/79b24c12-4d23-4899-af59-7a1fc838f806)
+![kwitter-post](https://github.com/kimaerimy/kwitter/assets/102725693/9864c668-a220-4186-92d2-309b7f1f0635)
