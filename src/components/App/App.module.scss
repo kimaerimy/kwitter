@@ -7,21 +7,21 @@
   font-style: normal;
   font-weight: 300;
   src: local("NotoSansKR"),
-    url(./../assets/fonts/NotoSansKR-Light.woff2) format("font-woff2");
+    url(./../../assets/fonts/NotoSansKR-Light.woff2) format("font-woff2");
 }
 @font-face {
   font-family: "Noto Sans KR";
   font-style: normal;
   font-weight: 400;
   src: local("NotoSansKR"),
-    url(./../assets/fonts/NotoSansKR-Regular.woff2) format("font-woff2");
+    url(./../../assets/fonts/NotoSansKR-Regular.woff2) format("font-woff2");
 }
 @font-face {
   font-family: "Noto Sans KR";
   font-style: normal;
   font-weight: 700;
   src: local("NotoSansKR"),
-    url(./../assets/fonts/NotoSansKR-Bold.woff2) format("font-woff2");
+    url(./../../assets/fonts/NotoSansKR-Bold.woff2) format("font-woff2");
 }
 html,
 body,

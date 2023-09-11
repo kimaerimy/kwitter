@@ -1,10 +1,10 @@
 import styles from "./Sidebar.module.scss";
-import FollowRecom from "components/FollowRecom";
+import FollowRecom from "components/Follow/FollowRecom/FollowRecom";
 
-const Sidebar = ({ userObj,}) => {
+const Sidebar = () => {
   return (
     <div className={styles["inner-container"]}>
-      <FollowRecom userObj={userObj} />
+      <FollowRecom />
     </div>
   );
 };

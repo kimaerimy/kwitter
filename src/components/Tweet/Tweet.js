@@ -1,22 +1,19 @@
+import { useContext, useEffect, useRef, useState } from "react";
+import { db, storage } from "fbase";
 import {
-  db,
-  doc,
-  deleteDoc,
-  updateDoc,
-  storage,
-  ref,
-  deleteObject,
-  onSnapshot,
-  query,
-  collection,
-  where,
-  orderBy,
   addDoc,
-  getDoc,
+  collection,
+  deleteDoc,
+  doc,
   getDocs,
-} from "fBase";
-import { useEffect, useRef, useState } from "react";
-import styles from "./Kweet.module.scss";
+  onSnapshot,
+  orderBy,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { deleteObject, ref } from "firebase/storage";
+import styles from "./Tweet.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTrashCan,
@@ -25,101 +22,101 @@ import {
   faRetweet,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCommentDots } from "@fortawesome/free-regular-svg-icons";
-import KweetReply from "./KweetReply";
+import TweetReply from "components/Tweet/TweetReply/TweetReply";
+import { UserContext } from "components/App/App";
 
-const Kweet = ({ kweetObj, uid }) => {
+const Tweet = ({ tweet }) => {
   const [toggles, setToggles] = useState({ popup: false, editing: false });
-  const [newKweet, setNewKweet] = useState(kweetObj.text);
+  const [newTweet, setNewTweet] = useState(tweet.text);
   const [countReplies, setCountReplies] = useState(0);
-  const [countRekweet, setCountRekweet] = useState(0);
-  const [kweetsProfiles, setKweetsProfiles] = useState({});
-  const [isReKweet, setIsReKweet] = useState(false);
+  const [countReTweet, setCountReTweet] = useState(0);
+  const [isReTweet, setIsReTweet] = useState(false);
+  const {
+    user,
+    userConnections: { users },
+  } = useContext(UserContext);
   const didMount = useRef(false);
   const popupEl = useRef();
   const onDelete = async () => {
     if (window.confirm("Are you sure delete this kweet?")) {
-      await deleteDoc(doc(db, "kweets", kweetObj.id));
-      if (kweetObj.attachmentUrl) {
-        await deleteObject(ref(storage, kweetObj.attachmentUrl));
+      await deleteDoc(doc(db, "tweets", tweet.id));
+      if (tweet.photo) {
+        await deleteObject(ref(storage, `/tweets/${tweet.userId}/${tweet.id}`));
       }
     }
   };
   const onToggle = (name, event) => {
     setToggles((prev) => ({ ...prev, [name]: !prev[name] }));
   };
-
   const onChange = (event) => {
-    setNewKweet(event.target.value);
+    setNewTweet(event.target.value);
   };
   const onSubmit = async (event) => {
     event.preventDefault();
-    await updateDoc(doc(db, "kweets", kweetObj.id), {
-      text: newKweet,
+    await updateDoc(doc(db, "tweets", tweet.id), {
+      text: newTweet,
     });
     onToggle("editing");
   };
 
   useEffect(() => {
-    onSnapshot(
+    const tweetRepliesSnapshot = onSnapshot(
       query(
-        collection(db, "kweetReplies"),
-        where("kweetId", "==", kweetObj.id),
+        collection(db, "tweetReplies"),
+        where("tweetId", "==", tweet.id),
         orderBy("createdAt", "asc")
       ),
       (snapshot) => {
         setCountReplies(snapshot.docs.length);
       }
     );
-    onSnapshot(query(collection(db, "users")), (snapshot) => {
-      const profilesObject = {};
-      snapshot.docs.forEach((doc) => {
-        profilesObject[doc.id] = doc.data();
-      });
-      setKweetsProfiles(profilesObject);
-    });
-    onSnapshot(
-      query(collection(db, "reKweets"), where("kweetId", "==", kweetObj.id)),
+    const reTweetsSnapshot = onSnapshot(
+      query(collection(db, "reTweets"), where("tweetId", "==", tweet.id)),
       (snapshot) => {
-        const reKweetUsers = snapshot.docs.map((doc) => doc.data().creatorId);
-        setCountRekweet(reKweetUsers.length);
-        if (reKweetUsers.includes(uid)) {
-          setIsReKweet(true);
+        const reTweetUsers = snapshot.docs.map((doc) => doc.data().userId);
+        setCountReTweet(reTweetUsers.length);
+        if (reTweetUsers.includes(user.userId)) {
+          setIsReTweet(true);
         }
       }
     );
+    return () => {
+      tweetRepliesSnapshot();
+      reTweetsSnapshot();
+    };
   }, []);
   useEffect(() => {
-    const onReKweet = async () => {
+    const onReTweet = async () => {
       const querySnapshot = await getDocs(
         query(
-          collection(db, "reKweets"),
-          where("creatorId", "==", uid),
-          where("kweetId", "==", kweetObj.id)
+          collection(db, "reTweets"),
+          where("userId", "==", user.userId),
+          where("tweetId", "==", tweet.id)
         )
       );
-      const reKweetData = querySnapshot.docs.map((doc) => doc.id);
-      if (isReKweet) {
-        if (reKweetData.length === 0) {
-          await addDoc(collection(db, "reKweets"), {
-            kweetId: kweetObj.id,
-            creatorId: uid,
+      const reTweetData = querySnapshot.docs.map((doc) => doc.id);
+      if (isReTweet) {
+        if (reTweetData.length === 0) {
+          await addDoc(collection(db, "reTweets"), {
+            tweetId: tweet.id,
+            userId: user.userId,
             createdAt: Date.now(),
           });
         }
       } else {
-        if (reKweetData.length > 0) {
-          reKweetData.forEach(
-            async (item) => await deleteDoc(doc(db, "reKweets", item))
+        if (reTweetData.length > 0) {
+          reTweetData.forEach(
+            async (item) => await deleteDoc(doc(db, "reTweets", item))
           );
         }
       }
     };
     if (didMount.current) {
-      onReKweet();
+      onReTweet();
     } else {
       didMount.current = true;
     }
-  }, [isReKweet]);
+  }, [isReTweet]);
   useEffect(() => {
     const closePopup = (event) => {
       if (popupEl.current && !popupEl.current.contains(event.target)) {
@@ -132,31 +129,28 @@ const Kweet = ({ kweetObj, uid }) => {
   return (
     <div className={styles["inner-container"]}>
       <div className={styles["items"]}>
-        {kweetObj.reKweet && (
+        {tweet.reTweet && (
           <div className={styles["badge"]}>
             <FontAwesomeIcon icon={faRetweet} />
             <span>You reposted</span>
           </div>
         )}
-        {kweetsProfiles[kweetObj.creatorId] && (
+        {users[tweet.userId] && (
           <div className={styles["profile"]}>
             <span className={styles["photo"]}>
-              {kweetsProfiles[kweetObj.creatorId].userPhoto && (
-                <img
-                  src={kweetsProfiles[kweetObj.creatorId].userPhoto}
-                  alt="userPhoto"
-                />
+              {users[tweet.userId].userPhoto && (
+                <img src={users[tweet.userId].userPhoto} alt="userPhoto" />
               )}
             </span>
             <div className={styles["info"]}>
               <span className={styles["name"]}>
-                {kweetsProfiles[kweetObj.creatorId].userName}
+                {users[tweet.userId].userName}
               </span>
               <span className={styles["date"]}>
-                {new Date(kweetObj.createdAt).toLocaleDateString()}
+                {new Date(tweet.createdAt).toLocaleDateString()}
               </span>
             </div>
-            {kweetObj.creatorId === uid && (
+            {tweet.userId === user.userId && (
               <div className={styles["more"]}>
                 {!toggles.popup && (
                   <div onClick={(event) => onToggle("popup", event)}>
@@ -201,7 +195,7 @@ const Kweet = ({ kweetObj, uid }) => {
               <form onSubmit={onSubmit}>
                 <textarea
                   rows="2"
-                  value={newKweet}
+                  value={newTweet}
                   onChange={onChange}
                   autoFocus
                 ></textarea>
@@ -212,10 +206,8 @@ const Kweet = ({ kweetObj, uid }) => {
           ) : (
             <div className={styles["view"]}>
               <div className={styles["view-content"]}>
-                <p>{kweetObj.text}</p>
-                {kweetObj.attachmentUrl && (
-                  <img src={kweetObj.attachmentUrl} alt="thumbnail" />
-                )}
+                <p>{tweet.text}</p>
+                {tweet.photo && <img src={tweet.photo} alt="thumbnail" />}
               </div>
               <div className={styles["reply-container"]}>
                 <ul className={styles["reply-tab"]}>
@@ -226,22 +218,17 @@ const Kweet = ({ kweetObj, uid }) => {
                   <li>
                     <span
                       className={`${styles["rekweet-btn"]} ${
-                        isReKweet && styles["active"]
+                        isReTweet && styles["active"]
                       }`}
-                      onClick={() => setIsReKweet((prev) => !prev)}
-                      title="reKweet"
+                      onClick={() => setIsReTweet((prev) => !prev)}
+                      title="reTweet"
                     >
                       <FontAwesomeIcon icon={faRetweet} />
                     </span>
-                    <span>{countRekweet}</span>
+                    <span>{countReTweet}</span>
                   </li>
                 </ul>
-                <KweetReply
-                  kweetId={kweetObj.id}
-                  uid={uid}
-                  KweetCreatorId={kweetObj.creatorId}
-                  kweetsProfiles={kweetsProfiles}
-                />
+                <TweetReply tweetId={tweet.id} tweetUserId={tweet.userId} />
               </div>
             </div>
           )}
@@ -251,4 +238,4 @@ const Kweet = ({ kweetObj, uid }) => {
   );
 };
 
-export default Kweet;
+export default Tweet;

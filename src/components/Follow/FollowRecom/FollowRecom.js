@@ -1,19 +1,29 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { db } from "fbase";
+import {
+  collection,
+  documentId,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import styles from "./FollowRecom.module.scss";
-import { collection, db, documentId, getDocs, query, where } from "fBase";
-import Follow from "components/Follow";
+import Follow from "components/Follow/Follow";
+import { UserContext } from "components/App/App";
 
-const FollowRecom = ({ userObj }) => {
+const FollowRecom = () => {
+  const {
+    userConnections: { following },
+  } = useContext(UserContext);
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const getUsers = async () => {
-      const following = [...userObj.follow, userObj.uid];
-      const list = await getDocs(
+      const snapshot = await getDocs(
         query(collection(db, "users"), where(documentId(), "not-in", following))
       );
-      const listArray = list.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setUsers(listArray);
+      const docs = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setUsers(docs);
     };
     getUsers();
   }, []);
@@ -25,7 +35,7 @@ const FollowRecom = ({ userObj }) => {
             <span>You might like</span>
           </div>
           {users?.map((user, idx) => (
-            <Follow user={user} userObj={userObj} key={idx} />
+            <Follow key={idx} user={user} />
           ))}
         </div>
       )}

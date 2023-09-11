@@ -1,15 +1,13 @@
+import { useState } from "react";
+import { auth, db } from "fbase";
 import {
-  auth,
-  GoogleAuthProvider,
   GithubAuthProvider,
-  signInWithPopup,
+  GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  db,
-  setDoc,
-  doc,
-} from "fBase";
-import { useState } from "react";
+  signInWithPopup,
+} from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import styles from "./Auth.module.scss";
 
 const Auth = ({ isMobile }) => {
@@ -28,20 +26,17 @@ const Auth = ({ isMobile }) => {
         );
         await setDoc(doc(db, "users", userCredential.user.uid), {
           createdAt: Date.now(),
+          userId: userCredential.user.uid,
           userName:
             userCredential.user.displayName ??
             userCredential.user.email.split("@")[0],
           userEmail: userCredential.user.email,
           userPhoto: userCredential.user.photoURL ?? "",
           userBg: "",
-          following: []
+          follow: [],
         });
       } else {
-        const userCredential = await signInWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
+        await signInWithEmailAndPassword(auth, email, password);
       }
     } catch (error) {
       setError(error.message.split("Firebase: ")[1]);

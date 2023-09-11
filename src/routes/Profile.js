@@ -1,106 +1,107 @@
+import React, { useContext, useEffect, useState } from "react";
+import { auth, db, storage } from "fbase";
+import { updateProfile } from "firebase/auth";
 import {
-  auth,
-  signOut,
-  db,
-  query,
-  getDocs,
-  orderBy,
   collection,
-  where,
-  updateProfile,
-  storage,
-  ref,
-  uploadString,
-  getDownloadURL,
   doc,
-  updateDoc,
-  onSnapshot,
   documentId,
-} from "fBase";
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+  getDocs,
+  onSnapshot,
+  orderBy,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import styles from "./Profile.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
-import Kweet from "components/Kweet";
-import Follow from "components/Follow";
+import Tweet from "components/Tweet/Tweet";
+import Follow from "components/Follow/Follow";
 import { faFaceSadTear } from "@fortawesome/free-regular-svg-icons";
+import { UserContext } from "components/App/App";
+import EmptyContent from "components/EmptyContent/EmptyContent";
 
-const Profile = ({ userObj, refreshUser }) => {
+const Profile = () => {
+  const { user, setUser, userConnections, setUserConnections } =
+    useContext(UserContext);
   const [inputs, setInputs] = useState({
-    nickname: userObj.displayName,
-    photo: userObj.userPhoto,
-    bg: userObj.userBg,
+    nickname: user.userName,
+    photo: user.userPhoto,
+    bg: user.userBg,
   });
   const { nickname, photo, bg } = inputs;
   const [isEditing, setIsEditing] = useState(false);
-  const [kweets, setKweets] = useState([]);
+  const [tweets, setTweets] = useState([]);
   const [editDiv, setEditDiv] = useState(false);
-  const [kweetsProfiles, setKweetsProfiles] = useState({});
-  const [kweetIds, setKweetIds] = useState([]);
-  const [rekweetIds, setReKweetIds] = useState([]);
+  const [tweetIds, setTweetIds] = useState([]);
+  const [reTweetIds, setReTweetIds] = useState([]);
   const [tabIndex, setTabIndex] = useState(0);
   const [following, setFollowing] = useState([]);
   const [followers, setFollowers] = useState([]);
-  const navigate = useNavigate();
-  const onLogOut = () => {
-    signOut(auth);
-    navigate("/");
-  };
-  const getKweetProfiles = async () => {
-    const profiles = await getDocs(collection(db, "users"));
-    const profilesObject = {};
-    profiles.docs.forEach((doc) => {
-      profilesObject[doc.id] = doc.data();
-    });
-    setKweetsProfiles(profilesObject);
-  };
+
   const getFollowing = async () => {
-    if (userObj.follow.length === 0) return;
+    if (user.follow.length === 0) return;
     const snapshot = await getDocs(
       query(
         collection(db, "users"),
-        where(documentId(), "in", [...userObj.follow])
+        where(documentId(), "in", [...user.follow])
       )
     );
-    const docsArr = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    setFollowing(docsArr);
+    const docs = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    setFollowing(docs);
   };
   const getFollowers = async () => {
     const snapshot = await getDocs(
       query(
         collection(db, "users"),
-        where("follow", "array-contains", userObj.uid)
+        where("follow", "array-contains", user.userId)
       )
     );
-    const docsArr = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    setFollowers(docsArr);
+    const docs = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    setFollowers(docs);
   };
   const onSubmit = async (event) => {
     event.preventDefault();
-    let photoURL = userObj.userPhoto ?? "",
-      userBg = userObj.userBg ?? "";
-    if (photo && photo !== userObj.userPhoto) {
-      const imgRef = ref(storage, `photoURL/${userObj.uid}}`);
+    let photoURL = user.userPhoto ?? "",
+      userBg = user.userBg ?? "";
+    if (photo && photo !== user.userPhoto) {
+      const imgRef = ref(storage, `userPhoto/${user.userId}}`);
       const response = await uploadString(imgRef, photo, "data_url");
       photoURL = await getDownloadURL(response.ref);
     }
-    if (bg && bg !== userObj.userBg) {
-      const bgRef = ref(storage, `userBg/${userObj.uid}}`);
+    if (bg && bg !== user.userBg) {
+      const bgRef = ref(storage, `userBg/${user.uid}}`);
       const response2 = await uploadString(bgRef, bg, "data_url");
       userBg = await getDownloadURL(response2.ref);
     }
-    await updateProfile(userObj.user, {
+    await updateProfile(auth.currentUser, {
       displayName: nickname,
       photoURL,
     });
-    await updateDoc(doc(db, "users", userObj.uid), {
+    await updateDoc(doc(db, "users", user.userId), {
       userName: nickname,
       userPhoto: photoURL,
       userBg,
     });
-
-    refreshUser();
+    setUser({
+      ...user,
+      userName: nickname,
+      userPhoto: photoURL,
+      userBg,
+    });
+    setUserConnections({
+      ...userConnections,
+      users: {
+        ...userConnections.users,
+        [user.userId]: {
+          ...userConnections.users[user.userId],
+          userName: nickname,
+          userPhoto: photoURL,
+          userBg,
+        },
+      },
+    });
     setIsEditing(false);
   };
   const onNameChange = (event) => {
@@ -118,69 +119,76 @@ const Profile = ({ userObj, refreshUser }) => {
     setTabIndex(index);
   };
   useEffect(() => {
-    onSnapshot(
-      query(
-        collection(db, "reKweets"),
-        where("creatorId", "==", userObj.uid),
-        orderBy("createdAt", "desc")
-      ),
-      (snapshot) => {
-        const docsArr = snapshot.docs.map((doc) => doc.data().kweetId);
-        setReKweetIds(docsArr);
-      }
-    );
-    onSnapshot(
-      query(
-        collection(db, "kweets"),
-        where("creatorId", "==", userObj.uid),
-        orderBy("createdAt", "desc")
-      ),
-      (snapshot) => {
-        const docsArr = snapshot.docs.map((doc) => doc.id);
-        setKweetIds(docsArr);
-      }
-    );
-    getKweetProfiles();
     getFollowers();
     getFollowing();
+    const reTweetSnapshot = onSnapshot(
+      query(
+        collection(db, "reTweets"),
+        where("userId", "==", user.userId),
+        orderBy("createdAt", "desc")
+      ),
+      (snapshot) => {
+        const docs = snapshot.docs.map((doc) => doc.data().tweetId);
+        setReTweetIds(docs);
+      }
+    );
+    const tweetSnapshot = onSnapshot(
+      query(
+        collection(db, "tweets"),
+        where("userId", "==", user.userId),
+        orderBy("createdAt", "desc")
+      ),
+      (snapshot) => {
+        const docs = snapshot.docs.map((doc) => doc.id);
+        setTweetIds(docs);
+      }
+    );
+
+    return () => {
+      reTweetSnapshot();
+      tweetSnapshot();
+    };
   }, []);
   useEffect(() => {
-    if (kweetIds.length > 0 || rekweetIds.length > 0) {
-      const set = new Set([...kweetIds, ...rekweetIds]);
+    if (tweetIds.length > 0 || reTweetIds.length > 0) {
       onSnapshot(
-        query(collection(db, "kweets"), where(documentId(), "in", [...set])),
+        query(
+          collection(db, "tweets"),
+          where(documentId(), "in", [
+            ...(tweetIds ?? []),
+            ...(reTweetIds ?? []),
+          ])
+        ),
         (snapshot) => {
-          const docsArr = snapshot.docs.map((doc) => ({
+          const docs = snapshot.docs.map((doc) => ({
             id: doc.id,
-            reKweet: doc.data().creatorId === userObj.uid ? false : true,
+            reTweet: doc.data().userId === user.userId ? false : true,
             ...doc.data(),
           }));
-          docsArr.sort((a, b) => b.createdAt - a.createdAt);
-          setKweets(docsArr);
+          docs.sort((a, b) => b.createdAt - a.createdAt);
+          setTweets(docs);
         }
       );
     }
-  }, [kweetIds, rekweetIds]);
+  }, [tweetIds, reTweetIds]);
   return (
     <div className={styles["inner-container"]}>
       <h3>{nickname}</h3>
       <div className={styles["profile-area"]}>
         <div className={styles["profile-bg"]}>
-          {userObj.userBg && <img src={userObj.userBg} alt="userBg" />}
+          {user.userBg && <img src={user.userBg} alt="userBg" />}
         </div>
         <div className={styles["profile-thumb"]}>
           <div className={styles["image-container"]}>
             <div className={styles["profile-image"]}>
-              {userObj.userPhoto && (
-                <img src={userObj.userPhoto} alt="userPhoto" />
-              )}
+              {user.userPhoto && <img src={user.userPhoto} alt="userPhoto" />}
             </div>
           </div>
           <button onClick={() => setIsEditing(true)}>Edit Profile</button>
         </div>
         <div className={styles["profile-content"]}>
           <div className={styles["name"]}>
-            <span>{nickname}</span>@{userObj.userEmail}
+            <span>{nickname}</span>@{user.userEmail}
           </div>
           <div className={styles["follow"]}>
             <div>
@@ -287,25 +295,15 @@ const Profile = ({ userObj, refreshUser }) => {
       <div className={styles["tab-content"]}>
         {tabIndex === 0 && (
           <div className={styles["kweet-area"]}>
-            {kweets.map((kweet) => (
-              <Kweet
-                key={kweet.id}
-                kweetObj={kweet}
-                uid={userObj.uid}
-                creatorProfiles={kweetsProfiles[kweet.creatorId]}
-              />
+            {tweets.map((tweet) => (
+              <Tweet key={tweet.id} tweet={tweet} />
             ))}
           </div>
         )}
         {tabIndex === 1 && (
           <>
             {following?.map((user, idx) => (
-              <Follow
-                user={user}
-                userObj={userObj}
-                key={idx}
-                refreshUser={refreshUser}
-              />
+              <Follow key={idx} user={user} />
             ))}
           </>
         )}
@@ -314,30 +312,15 @@ const Profile = ({ userObj, refreshUser }) => {
             {followers.length > 0 ? (
               <>
                 {followers?.map((user, idx) => (
-                  <Follow
-                    user={user}
-                    userObj={userObj}
-                    key={idx}
-                    refreshUser={refreshUser}
-                  />
+                  <Follow key={idx} user={user} />
                 ))}
               </>
             ) : (
-              <>
-                <div className={styles["null-container"]}>
-                  <div className={styles["bg"]}>
-                    <FontAwesomeIcon icon={faFaceSadTear} size="2xl" />
-                  </div>
-                  <div className={styles["comment"]}>
-                    <span>No Followers...</span>
-                  </div>
-                </div>
-              </>
+              <EmptyContent text={`No Followers....`} />
             )}
           </>
         )}
       </div>
-      <button onClick={onLogOut}>Log Out</button>
     </div>
   );
 };

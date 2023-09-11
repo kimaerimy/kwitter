@@ -1,40 +1,7 @@
 import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  onAuthStateChanged,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  GithubAuthProvider,
-  signInWithPopup,
-  signOut,
-  updateProfile,
-  updateCurrentUser,
-} from "firebase/auth";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  setDoc,
-  getDoc,
-  getDocs,
-  onSnapshot,
-  doc,
-  deleteDoc,
-  updateDoc,
-  query,
-  orderBy,
-  where,
-  getCountFromServer,
-  documentId
-} from "firebase/firestore";
-import {
-  getStorage,
-  ref,
-  uploadString,
-  getDownloadURL,
-  deleteObject,
-} from "firebase/storage";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -50,36 +17,4 @@ const auth = getAuth(fbase);
 const db = getFirestore(fbase);
 const storage = getStorage(fbase);
 
-export {
-  fbase,
-  auth,
-  onAuthStateChanged,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  GithubAuthProvider,
-  signInWithPopup,
-  signOut,
-  updateProfile,
-  updateCurrentUser,
-  db,
-  collection,
-  doc,
-  addDoc,
-  setDoc,
-  getDoc,
-  getDocs,
-  onSnapshot,
-  deleteDoc,
-  updateDoc,
-  getCountFromServer,
-  documentId,
-  storage,
-  ref,
-  uploadString,
-  getDownloadURL,
-  query,
-  orderBy,
-  deleteObject,
-  where,
-};
+export { fbase, auth, db, storage };

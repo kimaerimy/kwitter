@@ -1,51 +1,59 @@
-import styles from "./KweetReply.module.scss";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { db } from "fbase";
 import {
   addDoc,
   collection,
-  db,
   onSnapshot,
   orderBy,
   query,
   where,
-} from "fBase.js";
+} from "firebase/firestore";
+import styles from "./TweetReply.module.scss";
+import { UserContext } from "components/App/App";
 
-const KweetReply = ({ kweetId, uid, KweetCreatorId, kweetsProfiles }) => {
+const TweetReply = ({ tweetId, tweetUserId }) => {
   const [reply, setReply] = useState("");
   const [replies, setReplies] = useState([]);
+  const {
+    user,
+    userConnections: { users },
+  } = useContext(UserContext);
   const onReplyChange = (event) => {
     setReply(event.target.value);
   };
   const onReplySubmit = async (event) => {
     event.preventDefault();
-    await addDoc(collection(db, "kweetReplies"), {
+    await addDoc(collection(db, "tweetReplies"), {
       createdAt: Date.now(),
-      creatorId: uid,
+      userId: user.userId,
       text: reply,
-      kweetId: kweetId,
+      tweetId: tweetId,
     });
     setReply("");
   };
   useEffect(() => {
-    onSnapshot(
+    const tweetRepliesSnapshot = onSnapshot(
       query(
-        collection(db, "kweetReplies"),
-        where("kweetId", "==", kweetId),
+        collection(db, "tweetReplies"),
+        where("tweetId", "==", tweetId),
         orderBy("createdAt", "asc")
       ),
       (snapshot) => {
-        const repliesArray = snapshot.docs.map((doc) => ({
+        const docs = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
-        setReplies(repliesArray);
+        setReplies(docs);
       }
     );
+    return () => {
+      tweetRepliesSnapshot();
+    };
   }, []);
   return (
     <div className={styles["container"]}>
       <div className={styles["content"]}>
-        {KweetCreatorId !== uid && (
+        {tweetUserId !== user.userId && (
           <div className={styles["reply-submit"]}>
             <form onSubmit={onReplySubmit}>
               <input
@@ -60,9 +68,7 @@ const KweetReply = ({ kweetId, uid, KweetCreatorId, kweetsProfiles }) => {
         )}
         {replies?.map((reply, idx) => (
           <div className={styles["items"]} key={idx}>
-            <span>
-              {kweetsProfiles[reply.creatorId]?.userName}
-            </span>
+            <span>{users[reply.userId]?.userName}</span>
             <span>{reply.text}</span>
           </div>
         ))}
@@ -71,4 +77,4 @@ const KweetReply = ({ kweetId, uid, KweetCreatorId, kweetsProfiles }) => {
   );
 };
 
-export default KweetReply;
+export default TweetReply;

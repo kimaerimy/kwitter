@@ -1,15 +1,17 @@
+import { useContext } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Auth from "pages/Auth";
-import Home from "pages/Home";
-import Navigation from "components/Navigation";
-import Sidebar from "components/Sidebar";
-import Profile from "pages/Profile";
-import styles from "./Router.module.scss";
-import { Fragment } from "react";
+import Auth from "routes/Auth";
+import Home from "routes/Home";
+import Profile from "routes/Profile";
+import Navigation from "components/Navigation/Navigation";
+import Sidebar from "components/Sidebar/Sidebar";
+import styles from "./AppRouter.module.scss";
+import { UserContext } from "components/App/App";
 
-const AppRouter = ({ isLoggedIn, userObj, refreshUser, isMobile }) => {
+const AppRouter = ({ isMobile }) => {
+  const { isLoggedIn } = useContext(UserContext);
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <div className={styles["container"]}>
         <div className={styles["outer-container"]}>
           <Routes>
@@ -19,9 +21,9 @@ const AppRouter = ({ isLoggedIn, userObj, refreshUser, isMobile }) => {
                   path={`/`}
                   element={
                     <>
-                      <Navigation userObj={userObj} />
-                      <Home userObj={userObj} refreshUser={refreshUser} />
-                      <Sidebar userObj={userObj} />
+                      <Navigation />
+                      <Home />
+                      <Sidebar />
                     </>
                   }
                 />
@@ -29,9 +31,9 @@ const AppRouter = ({ isLoggedIn, userObj, refreshUser, isMobile }) => {
                   path="/profile"
                   element={
                     <>
-                      <Navigation userObj={userObj} />
-                      <Profile userObj={userObj} refreshUser={refreshUser} />
-                      <Sidebar userObj={userObj} />
+                      <Navigation />
+                      <Profile />
+                      <Sidebar />
                     </>
                   }
                 />

@@ -1,0 +1,20 @@
+.inner-container {
+  background-color: #f7f9f9;
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 150px;
+  .bg {
+    padding: 12px 16px;
+    color: #726d6d;
+  }
+  .comment {
+    span {
+      color: #726d6d;
+      font-weight: 700;
+    }
+  }
+}

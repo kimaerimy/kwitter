@@ -1,4 +1,7 @@
+import { useContext } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { auth } from "fbase";
+import { signOut } from "firebase/auth";
 import styles from "./Navigation.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -7,9 +10,10 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { faUser as faUserRegular } from "@fortawesome/free-regular-svg-icons";
-import { auth, signOut } from "fBase";
+import { UserContext } from "components/App/App";
 
-const Navigation = ({ userObj }) => {
+const Navigation = () => {
+  const { user } = useContext(UserContext);
   const location = useLocation().pathname.split("/")[1];
   const navigate = useNavigate();
   const onLogOut = () => {
@@ -50,24 +54,26 @@ const Navigation = ({ userObj }) => {
             </Link>
           </li>
         </ul>
-        <div className={styles["profile-wrap"]}>
-          <div className={styles["info"]}>
-            <div className={styles["photo"]}>
-              <img src={userObj.userPhoto} alt="userPhoto" />
+        {user && (
+          <div className={styles["profile-wrap"]}>
+            <div className={styles["info"]}>
+              <div className={styles["photo"]}>
+                <img src={user.userPhoto} alt="userPhoto" />
+              </div>
+              <div className={styles["info-detail"]}>
+                <div>
+                  <span>{user.userName}</span>
+                </div>
+                <div>
+                  <span>@{user.userEmail.split("@")[0]}</span>
+                </div>
+              </div>
             </div>
-            <div className={styles["info-detail"]}>
-              <div>
-                <span>{userObj.userName}</span>
-              </div>
-              <div>
-                <span>@{userObj.userEmail.split("@")[0]}</span>
-              </div>
+            <div className={styles["logout-btn"]}>
+              <button onClick={onLogOut}>LogOut</button>
             </div>
           </div>
-          <div className={styles["logout-btn"]}>
-            <button onClick={onLogOut}>LogOut</button>
-          </div>
-        </div>
+        )}
       </nav>
     </div>
   );
