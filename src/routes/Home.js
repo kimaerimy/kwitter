@@ -58,15 +58,15 @@ const Home = () => {
     };
   }, []);
   return (
-    <div className={styles["inner-container"]}>
-      <div className={styles["kweet-area"]}>
-        <div className={styles["kweet-header"]}>
-          <div className={styles["kweet-home"]}>
+    <main className={styles["inner-container"]}>
+      <div className={styles["content-wrap"]}>
+        <div className={styles["content-header"]}>
+          <div className={styles["content-header-logo"]}>
             <Link to="/">
               <h3>Home</h3>
             </Link>
           </div>
-          <div className={styles["kweet-tab"]}>
+          <div className={styles["content-header-tab"]}>
             <div
               className={`${styles["tab-items"]} ${
                 tabIndex === 0 && styles["active"]
@@ -87,7 +87,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-        <div className={styles["kweet-main"]}>
+        <div className={styles["content-main"]}>
           {tabIndex === 0 && (
             <>
               <TweetForm />
@@ -111,7 +111,7 @@ const Home = () => {
           )}
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 

@@ -1,15 +1,23 @@
+@import "assets/styles/_variables";
+
 .container {
-  padding: 20px;
-  .outer-container {
-    display: flex;
-    // width: 1024px;
-    // margin: 0 auto;
-    justify-content: center;
+  display: grid;
+  grid-template-areas:
+    "header main sidebar"
+    ". . ."
+    "footer footer footer";
+  grid-template-columns: 1fr 600px 1fr;
+  gap: 16px;
+  footer {
+    grid-area: footer;
   }
 }
 
+body {
+  background-color: $bg-color;
+}
 @media screen and (max-width: 768px) {
   .container {
-    //display: block;
+    grid-template-columns: 1fr auto 1fr;
   }
 }

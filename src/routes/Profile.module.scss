@@ -1,7 +1,11 @@
+@import "assets/styles/_variables";
+
 .inner-container {
+  grid-area: main;
   padding: 12px 16px;
   max-width: 600px;
-  flex-grow: 3;
+  border-left: 1px solid $border-color;
+  border-right: 1px solid $border-color;
   > h3 {
     font-weight: 700;
   }
@@ -234,5 +238,12 @@
         }
       }
     }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .inner-container {
+    grid-column-start: 1;
+    grid-column-end: 4;
   }
 }

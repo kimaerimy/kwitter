@@ -51,7 +51,7 @@ const TweetReply = ({ tweetId, tweetUserId }) => {
     };
   }, []);
   return (
-    <div className={styles["container"]}>
+    <div className={styles["inner-container"]}>
       <div className={styles["content"]}>
         {tweetUserId !== user.userId && (
           <div className={styles["reply-submit"]}>

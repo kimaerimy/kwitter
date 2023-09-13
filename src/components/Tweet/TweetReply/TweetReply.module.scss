@@ -1,4 +1,4 @@
-.container {
+.inner-container {
   .reply-submit {
     margin-bottom: 20px;
     form {
@@ -22,14 +22,20 @@
   }
   .content {
     .items {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
       margin-bottom: 10px;
       font-size: 0.9rem;
       span {
         font-weight: 300;
         &:first-child {
-          font-weight: 400;
-          width: 100px;
+          font-weight: 700;
+          width: 50px;
           margin-right: 20px;
+          white-space:nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
           cursor: pointer;
         }
       }

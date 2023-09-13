@@ -18,18 +18,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTrashCan,
   faPenToSquare,
-  faEllipsisVertical,
   faRetweet,
 } from "@fortawesome/free-solid-svg-icons";
-import { faCommentDots } from "@fortawesome/free-regular-svg-icons";
 import TweetReply from "components/Tweet/TweetReply/TweetReply";
 import { UserContext } from "components/App/App";
+import { ChatIcon, EllipsisIcon, ReTweetIcon, XIcon } from "components/Svg/Svg";
+import TweetEditForm from "./TweetEditForm/TweetEditForm";
 
 const Tweet = ({ tweet }) => {
   const [toggles, setToggles] = useState({ popup: false, editing: false });
   const [newTweet, setNewTweet] = useState(tweet.text);
   const [countReplies, setCountReplies] = useState(0);
   const [countReTweet, setCountReTweet] = useState(0);
+  const [isReplies, setIsReplies] = useState(false);
   const [isReTweet, setIsReTweet] = useState(false);
   const {
     user,
@@ -48,15 +49,20 @@ const Tweet = ({ tweet }) => {
   const onToggle = (name, event) => {
     setToggles((prev) => ({ ...prev, [name]: !prev[name] }));
   };
-  const onChange = (event) => {
-    setNewTweet(event.target.value);
-  };
-  const onSubmit = async (event) => {
-    event.preventDefault();
-    await updateDoc(doc(db, "tweets", tweet.id), {
-      text: newTweet,
-    });
-    onToggle("editing");
+
+  const formattedCreatedAt = (createdAt) => {
+    const diff = (Date.now() - createdAt) / 3600000;
+    if (diff < 1) {
+      return `${Math.floor(diff * 60)}m`;
+    } else if (diff < 22) {
+      return `${Math.floor(diff)}h`;
+    } else {
+      const date = new Date(createdAt);
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      });
+    }
   };
 
   useEffect(() => {
@@ -128,111 +134,129 @@ const Tweet = ({ tweet }) => {
   }, [popupEl]);
   return (
     <div className={styles["inner-container"]}>
-      <div className={styles["items"]}>
+      <div className={styles["content-wrap"]}>
         {tweet.reTweet && (
-          <div className={styles["badge"]}>
+          <div className={styles["content-header"]}>
             <FontAwesomeIcon icon={faRetweet} />
             <span>You reposted</span>
           </div>
         )}
-        {users[tweet.userId] && (
-          <div className={styles["profile"]}>
-            <span className={styles["photo"]}>
+        <div className={styles["content-main"]}>
+          <div className={styles["content-main-sidebar"]}>
+            <div className={styles["profile-photo"]}>
               {users[tweet.userId].userPhoto && (
                 <img src={users[tweet.userId].userPhoto} alt="userPhoto" />
               )}
-            </span>
-            <div className={styles["info"]}>
-              <span className={styles["name"]}>
-                {users[tweet.userId].userName}
-              </span>
-              <span className={styles["date"]}>
-                {new Date(tweet.createdAt).toLocaleDateString()}
-              </span>
             </div>
-            {tweet.userId === user.userId && (
-              <div className={styles["more"]}>
-                {!toggles.popup && (
-                  <div onClick={(event) => onToggle("popup", event)}>
-                    <FontAwesomeIcon icon={faEllipsisVertical} />
-                  </div>
-                )}
-                {toggles.popup && (
-                  <div className={styles["more-popup"]} ref={popupEl}>
-                    <div className={styles["popup-container"]}>
-                      <div onClick={onDelete} className={styles["popup-items"]}>
-                        <div>
-                          <FontAwesomeIcon icon={faTrashCan} />
+          </div>
+          <div className={styles["content-main-view"]}>
+            <div className={styles["view-header"]}>
+              <div className={styles["view-header-profile"]}>
+                <div className={styles["profile-name"]}>
+                  <span>{users[tweet.userId]?.userName}</span>
+                  <span>@{users[tweet.userId]?.userEmail.split("@")[0]}</span>
+                  <span>·</span>
+                </div>
+                <div className={styles["profile-date"]}>
+                  <span>{formattedCreatedAt(tweet.createdAt)}</span>
+                </div>
+              </div>
+              {tweet.userId === user.userId && (
+                <div className={styles["view-header-button"]}>
+                  {!toggles.popup && !toggles.editing && (
+                    <div
+                      className={styles["more-button"]}
+                      onClick={(event) => onToggle("popup", event)}
+                    >
+                      <EllipsisIcon size={20} />
+                    </div>
+                  )}
+                  {toggles.popup && (
+                    <div className={styles["more-popup"]} ref={popupEl}>
+                      <div className={styles["popup-container"]}>
+                        <div
+                          onClick={onDelete}
+                          className={styles["popup-items"]}
+                        >
+                          <div>
+                            <FontAwesomeIcon icon={faTrashCan} />
+                          </div>
+                          <div>
+                            <span>Delete</span>
+                          </div>
                         </div>
-                        <div>
-                          <span>Delete</span>
-                        </div>
-                      </div>
-                      <div
-                        onClick={(event) => {
-                          onToggle("editing", event);
-                          onToggle("popup", event);
-                        }}
-                        className={styles["popup-items"]}
-                      >
-                        <div>
-                          <FontAwesomeIcon icon={faPenToSquare} />
-                        </div>
-                        <div>
-                          <span>Edit</span>
+                        <div
+                          onClick={(event) => {
+                            onToggle("editing", event);
+                            onToggle("popup", event);
+                          }}
+                          className={styles["popup-items"]}
+                        >
+                          <div>
+                            <FontAwesomeIcon icon={faPenToSquare} />
+                          </div>
+                          <div>
+                            <span>Edit</span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        )}
-        <div className={styles["content"]}>
-          {toggles.editing ? (
-            <div className={styles["edit"]}>
-              <form onSubmit={onSubmit}>
-                <textarea
-                  rows="2"
-                  value={newTweet}
-                  onChange={onChange}
-                  autoFocus
-                ></textarea>
-                <input type="submit" value="Update" />
-              </form>
-              <button onClick={() => onToggle("editing")}>Cancel</button>
+                  )}
+                </div>
+              )}
             </div>
-          ) : (
-            <div className={styles["view"]}>
-              <div className={styles["view-content"]}>
-                <p>{tweet.text}</p>
-                {tweet.photo && <img src={tweet.photo} alt="thumbnail" />}
+            {toggles.editing ? (
+              <div className={styles["edit-main"]}>
+                <TweetEditForm tweet={tweet} toggles={toggles} setToggles={setToggles}/>
               </div>
-              <div className={styles["reply-container"]}>
-                <ul className={styles["reply-tab"]}>
-                  <li>
-                    <FontAwesomeIcon icon={faCommentDots} />
-                    <span>{countReplies}</span>
-                  </li>
-                  <li>
-                    <span
-                      className={`${styles["rekweet-btn"]} ${
-                        isReTweet && styles["active"]
-                      }`}
+            ) : (
+              <>
+                <div className={styles["view-main"]}>
+                  <div className={styles["view-main-text"]}>
+                    <p>{tweet.text}</p>
+                    <div className={styles["view-main-photo"]}>
+                      {tweet.photo && <img src={tweet.photo} alt="thumbnail" />}
+                    </div>
+                  </div>
+                </div>
+                <div className={styles["view-footer"]}>
+                  <ul className={styles["view-footer-tab"]}>
+                    <li
+                      className={styles["tab-item"]}
+                      onClick={() => setIsReplies((prev) => !prev)}
+                    >
+                      <div className={styles["tab-item-icon"]}>
+                        <ChatIcon size={20} />
+                      </div>
+                      <div className={styles["tab-item-text"]}>
+                        <span>{countReplies}</span>
+                      </div>
+                    </li>
+                    <li
+                      className={`${styles["tab-item"]} ${
+                        styles["reTweet-button"]
+                      } ${isReTweet && styles["active"]}`}
                       onClick={() => setIsReTweet((prev) => !prev)}
                       title="reTweet"
                     >
-                      <FontAwesomeIcon icon={faRetweet} />
-                    </span>
-                    <span>{countReTweet}</span>
-                  </li>
-                </ul>
-                <TweetReply tweetId={tweet.id} tweetUserId={tweet.userId} />
-              </div>
-            </div>
-          )}
+                      <div className={styles["tab-item-icon"]}>
+                        <ReTweetIcon size={20} />
+                      </div>
+                      <div className={styles["tab-item-text"]}>
+                        <span>{countReTweet}</span>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </>
+            )}
+          </div>
         </div>
+        {isReplies && (
+          <div className={styles["content-footer"]}>
+            <TweetReply tweetId={tweet.id} tweetUserId={tweet.userId} />
+          </div>
+        )}
       </div>
     </div>
   );

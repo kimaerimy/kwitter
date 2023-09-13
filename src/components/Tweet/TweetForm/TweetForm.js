@@ -6,6 +6,7 @@ import { faImage } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./TweetForm.module.scss";
 import { UserContext } from "components/App/App";
+import { Spinner, XIcon } from "components/Svg/Svg";
 
 const TweetForm = () => {
   const { user } = useContext(UserContext);
@@ -55,24 +56,33 @@ const TweetForm = () => {
   };
   return (
     <div className={styles["inner-container"]}>
+      {isLoading && (
+        <div className={styles["loader"]}>
+          <Spinner color="rgb(29, 155, 240, 0.5)" />
+        </div>
+      )}
       <div className={styles["profile"]}>
         {user?.userPhoto && <img src={user.userPhoto} alt="userPhoto" />}
       </div>
       <form onSubmit={onSubmit}>
         <textarea
           className={styles["textarea"]}
-          rows="5"
-          maxLength={100}
+          rows="4"
+          maxLength={180}
           placeholder="What is happening?"
           onChange={onChange}
           value={tweet}
         ></textarea>
         <div className={styles["file-area"]}>
           {imgFile && (
-            <div className={styles["file-thumb"]}>
-              <img src={imgFile} alt="Thumbnail" />
-              <button onClick={onClear}>X</button>
-            </div>
+            <>
+              <div className={styles["file-remove-button"]} onClick={onClear}>
+                <XIcon />
+              </div>
+              <div className={styles["file-thumb"]}>
+                <img src={imgFile} alt="Thumbnail" />
+              </div>
+            </>
           )}
           <div className={styles["file-input"]}>
             <label
@@ -93,7 +103,7 @@ const TweetForm = () => {
               className={`${!tweet && styles["dd"]} ${
                 (tweet || imgFile) && styles["active"]
               }`}
-              value={isLoading ? "Posting..." : "Post"}
+              value="Post"
             />
           </div>
         </div>

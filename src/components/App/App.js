@@ -80,6 +80,7 @@ const App = () => {
             userConnections,
             setUserConnections,
             isLoggedIn,
+            isMobile
           }}
         >
           <AppRouter isMobile={isMobile} />
