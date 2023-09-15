@@ -24,6 +24,7 @@ const Home = () => {
   const {
     user,
     userConnections: { following, followers, users },
+    render
   } = useContext(UserContext);
   const onClickTab = (index) => {
     setTabIndex(index);
@@ -56,7 +57,7 @@ const Home = () => {
     return () => {
       fetchTweets();
     };
-  }, []);
+  }, [followers, following]);
   return (
     <main className={styles["inner-container"]}>
       <div className={styles["content-wrap"]}>

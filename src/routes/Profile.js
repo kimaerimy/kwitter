@@ -148,7 +148,7 @@ const Profile = () => {
       reTweetSnapshot();
       tweetSnapshot();
     };
-  }, []);
+  }, [getFollowers, getFollowing]);
   useEffect(() => {
     if (tweetIds.length > 0 || reTweetIds.length > 0) {
       onSnapshot(
@@ -188,7 +188,7 @@ const Profile = () => {
         </div>
         <div className={styles["profile-content"]}>
           <div className={styles["name"]}>
-            <span>{nickname}</span>@{user.userEmail}
+            <span>{nickname}</span>{user.userEmail}
           </div>
           <div className={styles["follow"]}>
             <div>

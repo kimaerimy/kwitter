@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Auth from "routes/Auth";
 import Home from "routes/Home";
@@ -9,13 +9,13 @@ import styles from "./AppRouter.module.scss";
 import { UserContext } from "components/App/App";
 import ScrollToTop from "components/ScrollToTop/ScrollToTop";
 import Search from "routes/Search";
+import Footer from "components/Footer/Footer";
 
 const AppRouter = ({ isMobile }) => {
-  console.log(isMobile);
   const { isLoggedIn } = useContext(UserContext);
   return (
     <>
-      <Router>
+      <Router basename={process.env.PUBLIC_URL}>
         <ScrollToTop />
         <div className={styles["container"]}>
           <Routes>
@@ -40,7 +40,7 @@ const AppRouter = ({ isMobile }) => {
                       {!isMobile && <Sidebar />}
                     </>
                   }
-                />                
+                />
                 <Route
                   path="/profile"
                   element={
@@ -58,7 +58,7 @@ const AppRouter = ({ isMobile }) => {
               </>
             )}
           </Routes>
-          <footer>&copy; {new Date().getFullYear()} Kwitter</footer>
+          {/* <Footer /> */}
         </div>
       </Router>
     </>

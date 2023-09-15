@@ -9,7 +9,6 @@ import {
   onSnapshot,
   orderBy,
   query,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
@@ -27,7 +26,6 @@ import TweetEditForm from "./TweetEditForm/TweetEditForm";
 
 const Tweet = ({ tweet }) => {
   const [toggles, setToggles] = useState({ popup: false, editing: false });
-  const [newTweet, setNewTweet] = useState(tweet.text);
   const [countReplies, setCountReplies] = useState(0);
   const [countReTweet, setCountReTweet] = useState(0);
   const [isReplies, setIsReplies] = useState(false);
@@ -207,7 +205,11 @@ const Tweet = ({ tweet }) => {
             </div>
             {toggles.editing ? (
               <div className={styles["edit-main"]}>
-                <TweetEditForm tweet={tweet} toggles={toggles} setToggles={setToggles}/>
+                <TweetEditForm
+                  tweet={tweet}
+                  toggles={toggles}
+                  setToggles={setToggles}
+                />
               </div>
             ) : (
               <>

@@ -2,8 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 import styles from "./Search.module.scss";
 import { UserContext } from "components/App/App";
 import FollowRecom from "components/Follow/FollowRecom/FollowRecom";
-import { collection, getDocs, query } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "fbase";
+import Follow from "components/Follow/Follow";
 
 const Search = () => {
   const { user, setUser, userConnections, setUserConnections } =
@@ -16,7 +17,9 @@ const Search = () => {
   };
   useEffect(() => {
     const searchSnapshot = async () => {
-      const allDocs = await getDocs(query(collection(db, "users")));
+      const allDocs = await getDocs(
+        query(collection(db, "users"), where("userId", "!=", user.userId))
+      );
       const searchDocs = allDocs.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -27,9 +30,19 @@ const Search = () => {
   }, []);
 
   useEffect(() => {
-    console.log("searchText called");
     if (searchText) {
-      //allData
+      const searchInName = allData.filter((doc) =>
+        doc.userName.includes(searchText)
+      );
+      const searchInEmail = allData.filter((doc) =>
+        doc.userEmail.includes(searchText)
+      );
+      const filteredArr = [...searchInEmail, ...searchInName].filter(
+        (ele, idx, arr) => arr.indexOf(ele) === idx
+      );
+      setSearchResult(filteredArr);
+    } else {
+      setSearchResult([]);
     }
   }, [searchText]);
   return (
@@ -41,11 +54,13 @@ const Search = () => {
           value={searchText}
           onChange={onChange}
         />
-        {/* <div className={styles["search-input"]}><input type="text" placeholder="search" /></div> */}
-        {/* <div className={styles["search-button"]}><SearchIcon /></div> */}
       </div>
-      <div className={styles["result-form"]}>{searchResult}</div>
-      <FollowRecom />
+      <div className={styles["result-form"]}>
+        {searchResult?.map((user, idx) => (
+          <Follow key={idx} user={user} searchText={searchText} />
+        ))}
+        <FollowRecom />
+      </div>
     </div>
   );
 };

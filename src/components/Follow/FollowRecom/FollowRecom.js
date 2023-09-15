@@ -4,6 +4,7 @@ import {
   collection,
   documentId,
   getDocs,
+  limit,
   query,
   where,
 } from "firebase/firestore";
@@ -20,7 +21,7 @@ const FollowRecom = () => {
   useEffect(() => {
     const getUsers = async () => {
       const snapshot = await getDocs(
-        query(collection(db, "users"), where(documentId(), "not-in", following))
+        query(collection(db, "users"), where(documentId(), "not-in", following), limit(3))
       );
       const docs = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setUsers(docs);

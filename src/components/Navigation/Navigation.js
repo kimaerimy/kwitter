@@ -91,7 +91,7 @@ const Navigation = () => {
             <div className={styles["profile-wrap"]}>
               <div className={styles["profile-info"]}>
                 <div className={styles["profile-photo"]}>
-                  <img src={user.userPhoto} alt="userPhoto" />
+                  {user.userPhoto && <img src={user.userPhoto} alt="userPhoto" />}
                 </div>
                 <div className={styles["profile-info-detail"]}>
                   <div>

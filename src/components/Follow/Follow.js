@@ -3,9 +3,10 @@ import { db } from "fbase";
 import { doc, updateDoc } from "firebase/firestore";
 import styles from "./Follow.module.scss";
 import { UserContext } from "components/App/App";
+import TextHighlights from "components/TextHighlights/TextHighlights";
 
-const Follow = ({ user }) => {
-  const { user: currentUser } = useContext(UserContext);
+const Follow = ({ user, searchText = "" }) => {
+  const { user: currentUser, setRender } = useContext(UserContext);
   const [following, setFollowing] = useState(
     Boolean(currentUser.follow?.includes(user.userId))
   );
@@ -21,6 +22,7 @@ const Follow = ({ user }) => {
       follow: currentUser.follow,
     });
     setFollowing((prev) => !prev);
+    setRender((prev) => prev + 1);
   };
   return (
     <div className={styles["inner-container"]}>
@@ -28,11 +30,11 @@ const Follow = ({ user }) => {
         {user?.userPhoto && <img src={user.userPhoto} alt="userPhoto" />}
       </div>
       <div className={styles["info"]}>
-        <div>
-          <span>{user?.userName}</span>
+        <div className={styles["search-text"]}>
+          <TextHighlights text={user.userName} searchText={searchText} />
         </div>
-        <div>
-          <span>{user?.userEmail?.split("@")[0]}</span>
+        <div className={styles["text"]}>
+          <span>@{user?.userEmail?.split("@")[0]}</span>
         </div>
       </div>
       <div className={styles["button"]}>

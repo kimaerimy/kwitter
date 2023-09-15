@@ -5,7 +5,7 @@ const EmptyContent = ({ text = "No Contents..." }) => {
   return (
     <div className={styles["inner-container"]}>
       <div className={styles["bg"]}>
-        <FaceFrownIcon size="2" />
+        <FaceFrownIcon size="40" />
       </div>
       <div className={styles["comment"]}>
         <span>{text}</span>

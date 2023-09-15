@@ -17,6 +17,7 @@ export const UserContext = createContext();
 
 const App = () => {
   const [init, setInit] = useState(false);
+  const [render, setRender] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [userConnections, setUserConnections] = useState({
@@ -69,7 +70,7 @@ const App = () => {
         () => window.matchMedia("screen and (max-width: 768px").matches
       );
     });
-  }, []);
+  }, [render]);
   return (
     <>
       {init ? (
@@ -80,7 +81,9 @@ const App = () => {
             userConnections,
             setUserConnections,
             isLoggedIn,
-            isMobile
+            isMobile,
+            render,
+            setRender,
           }}
         >
           <AppRouter isMobile={isMobile} />
