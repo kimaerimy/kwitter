@@ -1,16 +1,25 @@
 {
   "files": {
-    "main.css": "/kwitter/static/css/main.bb560059.css",
-    "main.js": "/kwitter/static/js/main.dd1cb557.js",
+    "main.css": "/kwitter/static/css/main.30e5746b.css",
+    "main.js": "/kwitter/static/js/main.5d3be623.js",
     "static/media/NotoSansKR-Bold.woff2": "/kwitter/static/media/NotoSansKR-Bold.4665b16c0fc4228919e2.woff2",
     "static/media/NotoSansKR-Regular.woff2": "/kwitter/static/media/NotoSansKR-Regular.e9602d66930a05b626cf.woff2",
     "static/media/NotoSansKR-Light.woff2": "/kwitter/static/media/NotoSansKR-Light.ff050d2675a663fd413d.woff2",
+    "static/media/NotoSansKR-Thin.woff2": "/kwitter/static/media/NotoSansKR-Thin.9b11c87ec6cf160f8620.woff2",
+    "static/media/NotoSansKR-Bold.woff": "/kwitter/static/media/NotoSansKR-Bold.add3713e113c6a5441b7.woff",
+    "static/media/NotoSansKR-Medium.woff": "/kwitter/static/media/NotoSansKR-Medium.92132e36cdaed4fe2071.woff",
+    "static/media/NotoSansKR-Regular.woff": "/kwitter/static/media/NotoSansKR-Regular.6b7c5bd56919f7ab2d8a.woff",
+    "static/media/NotoSansKR-Light.woff": "/kwitter/static/media/NotoSansKR-Light.6e7dd008c9464f83f737.woff",
+    "static/media/NotoSansKR-Black.woff": "/kwitter/static/media/NotoSansKR-Black.42b90b41c7e39732bb0a.woff",
+    "static/media/NotoSansKR-Thin.woff": "/kwitter/static/media/NotoSansKR-Thin.abbd800ac1e08f0cb90c.woff",
+    "static/media/NotoSansKR-Medium.woff2": "/kwitter/static/media/NotoSansKR-Medium.0f1fa7470da98505b8bc.woff2",
+    "static/media/NotoSansKR-Black.woff2": "/kwitter/static/media/NotoSansKR-Black.93f882d04f11787fe141.woff2",
     "index.html": "/kwitter/index.html",
-    "main.bb560059.css.map": "/kwitter/static/css/main.bb560059.css.map",
-    "main.dd1cb557.js.map": "/kwitter/static/js/main.dd1cb557.js.map"
+    "main.30e5746b.css.map": "/kwitter/static/css/main.30e5746b.css.map",
+    "main.5d3be623.js.map": "/kwitter/static/js/main.5d3be623.js.map"
   },
   "entrypoints": [
-    "static/css/main.bb560059.css",
-    "static/js/main.dd1cb557.js"
+    "static/css/main.30e5746b.css",
+    "static/js/main.5d3be623.js"
   ]
 }
