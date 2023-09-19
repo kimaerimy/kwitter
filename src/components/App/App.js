@@ -70,7 +70,7 @@ const App = () => {
         () => window.matchMedia("screen and (max-width: 768px").matches
       );
     });
-  }, [render]);
+  }, []);
   return (
     <>
       {init ? (

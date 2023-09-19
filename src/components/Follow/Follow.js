@@ -11,18 +11,18 @@ const Follow = ({ user, searchText = "" }) => {
     Boolean(currentUser.follow?.includes(user.userId))
   );
   const onFollow = async () => {
+    let followList;
     if (following) {
-      currentUser.follow = currentUser.follow?.filter(
-        (el) => el !== user.userId
-      );
+      followList = currentUser.follow?.filter((el) => el !== user.userId);
     } else {
-      currentUser.follow.push(user.userId);
+      followList = currentUser.follow;
+      followList.push(user.userId);
     }
     await updateDoc(doc(db, "users", currentUser.userId), {
-      follow: currentUser.follow,
+      follow: followList,
     });
     setFollowing((prev) => !prev);
-    setRender((prev) => prev + 1);
+    // setRender((prev) => prev + 1);
   };
   return (
     <div className={styles["inner-container"]}>

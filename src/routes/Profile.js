@@ -148,7 +148,7 @@ const Profile = () => {
       reTweetSnapshot();
       tweetSnapshot();
     };
-  }, [getFollowers, getFollowing]);
+  }, []);
   useEffect(() => {
     if (tweetIds.length > 0 || reTweetIds.length > 0) {
       onSnapshot(

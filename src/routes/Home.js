@@ -24,7 +24,6 @@ const Home = () => {
   const {
     user,
     userConnections: { following, followers, users },
-    render
   } = useContext(UserContext);
   const onClickTab = (index) => {
     setTabIndex(index);
