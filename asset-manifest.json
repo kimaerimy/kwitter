@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/kwitter/static/css/main.30e5746b.css",
-    "main.js": "/kwitter/static/js/main.258e5c3a.js",
+    "main.css": "/kwitter/static/css/main.b3a9ae22.css",
+    "main.js": "/kwitter/static/js/main.36ff9f14.js",
     "static/media/NotoSansKR-Bold.woff2": "/kwitter/static/media/NotoSansKR-Bold.4665b16c0fc4228919e2.woff2",
     "static/media/NotoSansKR-Regular.woff2": "/kwitter/static/media/NotoSansKR-Regular.e9602d66930a05b626cf.woff2",
     "static/media/NotoSansKR-Light.woff2": "/kwitter/static/media/NotoSansKR-Light.ff050d2675a663fd413d.woff2",
@@ -15,11 +15,11 @@
     "static/media/NotoSansKR-Medium.woff2": "/kwitter/static/media/NotoSansKR-Medium.0f1fa7470da98505b8bc.woff2",
     "static/media/NotoSansKR-Black.woff2": "/kwitter/static/media/NotoSansKR-Black.93f882d04f11787fe141.woff2",
     "index.html": "/kwitter/index.html",
-    "main.30e5746b.css.map": "/kwitter/static/css/main.30e5746b.css.map",
-    "main.258e5c3a.js.map": "/kwitter/static/js/main.258e5c3a.js.map"
+    "main.b3a9ae22.css.map": "/kwitter/static/css/main.b3a9ae22.css.map",
+    "main.36ff9f14.js.map": "/kwitter/static/js/main.36ff9f14.js.map"
   },
   "entrypoints": [
-    "static/css/main.30e5746b.css",
-    "static/js/main.258e5c3a.js"
+    "static/css/main.b3a9ae22.css",
+    "static/js/main.36ff9f14.js"
   ]
 }
