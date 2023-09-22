@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { auth } from "fbase";
 import { signOut } from "firebase/auth";
@@ -12,13 +12,18 @@ import {
   UserIcon,
 } from "components/Svg/Svg";
 
-const Navigation = () => {
+const Navigation = ({ isMobile }) => {
   const { user } = useContext(UserContext);
+  const [isHover, setIsHover] = useState(false);
   const location = useLocation().pathname.split("/")[1];
   const navigate = useNavigate();
+  const popupEl = useRef();
   const onLogOut = () => {
     signOut(auth);
     navigate("/");
+  };
+  const onPopup = () => {
+    setIsHover((prev) => !prev);
   };
   return (
     <header className={styles["inner-container"]}>
@@ -74,24 +79,39 @@ const Navigation = () => {
                 </div>
               </Link>
             </li>
-            <li className={styles["nav-item"]}>
-              <Link>
-                <div className={styles["item-box"]}>
-                  <MoreIcon
-                    fill={location === "More" ? `currentColor` : `none`}
-                  />
-                  <div>
-                    <span>Menu3</span>
+            {isMobile && (
+              <li className={styles["nav-item"]}>
+                <a href="#;" onClick={onPopup}>
+                  <div className={styles["item-box"]}>
+                    <div className={styles["profile-photo"]}>
+                      {user?.userPhoto && (
+                        <img src={user.userPhoto} alt="userPhoto" />
+                      )}
+                    </div>
+                    <div>
+                      <span>SignOut</span>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            </li>
+                  <div
+                    className={`${styles["item-popup"]} ${
+                      isHover && styles["active"]
+                    }`}
+                  >
+                    <div className={styles["profile-logout"]}>
+                      <button onClick={onLogOut}>LogOut</button>
+                    </div>
+                  </div>
+                </a>
+              </li>
+            )}
           </ul>
           {user && (
             <div className={styles["profile-wrap"]}>
               <div className={styles["profile-info"]}>
                 <div className={styles["profile-photo"]}>
-                  {user.userPhoto && <img src={user.userPhoto} alt="userPhoto" />}
+                  {user.userPhoto && (
+                    <img src={user.userPhoto} alt="userPhoto" />
+                  )}
                 </div>
                 <div className={styles["profile-info-detail"]}>
                   <div>

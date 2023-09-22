@@ -18,6 +18,7 @@ const AppRouter = ({ isMobile }) => {
       <Router basename={process.env.PUBLIC_URL}>
         <ScrollToTop />
         <div className={styles["container"]}>
+          {isLoggedIn && <Navigation isMobile={isMobile} />}
           <Routes>
             {isLoggedIn ? (
               <>
@@ -25,7 +26,6 @@ const AppRouter = ({ isMobile }) => {
                   path={`/`}
                   element={
                     <>
-                      <Navigation />
                       <Home />
                       {!isMobile && <Sidebar />}
                     </>
@@ -35,7 +35,6 @@ const AppRouter = ({ isMobile }) => {
                   path={`/search`}
                   element={
                     <>
-                      <Navigation />
                       <Search />
                       {!isMobile && <Sidebar />}
                     </>
@@ -45,7 +44,6 @@ const AppRouter = ({ isMobile }) => {
                   path="/profile"
                   element={
                     <>
-                      <Navigation />
                       <Profile />
                       {!isMobile && <Sidebar />}
                     </>
