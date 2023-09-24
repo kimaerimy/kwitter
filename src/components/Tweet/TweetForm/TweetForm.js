@@ -68,7 +68,7 @@ const TweetForm = () => {
         <textarea
           className={styles["textarea"]}
           rows="4"
-          maxLength={180}
+          maxLength={120}
           placeholder="What is happening?"
           onChange={onChange}
           value={tweet}

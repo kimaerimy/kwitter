@@ -69,8 +69,8 @@ const TweetEditForm = ({ tweet, toggles, setToggles }) => {
       )}
       <form onSubmit={onSubmit}>
         <textarea
-          rows="2"
-          maxLength={180}
+          rows="4"
+          maxLength={120}
           value={newTweet}
           onChange={onChange}
           autoFocus
