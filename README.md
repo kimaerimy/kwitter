@@ -1,44 +1,36 @@
-## Kwitter : Twitter Clone Project
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-트위터 클론 프로젝트 
+## Getting Started
 
-  
-## 사용 기술
+First, run the development server:
 
-> Firebase : Firestore, Authentication, 
-
-> React.js, SCSS
-
-## 구현된 기능
-
-* 게시글(트윗)
-  * 댓글
-  * 리트윗 
-
-* 회원가입 및 로그인
-  * Firebase Authentication을 활용한 회원가입 및 로그인 구현
-  * Firebase Firestore 추가 회원정보 구현
-    * 프로필
-
-## 코드 (Code)
-
-* 문장속 코드 `example code inline` 삽입 예시입니다.
-
-* 박스형 코드 삽입예시입니다.
-```
-example code box
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-## 링크
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-* [https://www.github.io/kwitter](https://kimaerimy.github.io/kwitter)
-* [Github](https://www.github.com)
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## 강조
+This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-* 강조 문법 **강조된 부분** 예시입니다.
+## Learn More
 
-## 이미지
+To learn more about Next.js, take a look at the following resources:
 
-![kwitter-login](https://github.com/kimaerimy/kwitter/assets/102725693/79b24c12-4d23-4899-af59-7a1fc838f806)
-![kwitter-post](https://github.com/kimaerimy/kwitter/assets/102725693/9864c668-a220-4186-92d2-309b7f1f0635)
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
